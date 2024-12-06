@@ -7,13 +7,19 @@ app = server.app
 
 db.init_app(app)
 
-# Criação das tabelas no banco de dados
-with app.app_context():
-    try:
-        db.create_all()
-        print("Tabelas criadas com sucesso!")
-    except Exception as e:
-        print(f"Erro ao criar tabelas: {e}")
+
+# Inicializa o banco de dados
+def init_db():
+    with app.app_context():
+        try:
+            db.create_all()
+            print("Tabelas criadas com sucesso!")
+        except Exception as e:
+            print(f"Erro ao criar tabelas: {e}")
+
+
+# Configuração do banco de dados
+init_db()
 
 # Registro do Blueprint
 app.register_blueprint(user_bp)

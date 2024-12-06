@@ -1,6 +1,5 @@
 import re
 from datetime import datetime
-from app.services.validate_user_data import ValidatorService
 from db import db
 from sqlalchemy.sql import func
 from db import db

@@ -14,18 +14,19 @@ class UserRepository:
                 VALUES (:id, :name, :age, :cpf, :email, :password_hash, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
                 """
         )
-       # Retorna dicionário e status
+
+    # Retorna dicionário e status
 
     @staticmethod
-    def listar_usuarios():
+    def list_users():
         return text("SELECT * FROM Users")
 
     @staticmethod
-    def obter_usuario():
+    def get_user():
         return text("SELECT * FROM Users WHERE id = :id")
 
     @staticmethod
-    def atualizar_usuario():
+    def update_user():
         return text(
             """
             UPDATE Users
@@ -35,7 +36,7 @@ class UserRepository:
         )
 
     @staticmethod
-    def deletar_usuario():
+    def delete_user():
         return text("DELETE FROM Users WHERE id = :id")
 
     @staticmethod
