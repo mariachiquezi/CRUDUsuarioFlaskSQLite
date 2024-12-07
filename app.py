@@ -1,6 +1,6 @@
 from flask import Flask
 from db import db
-from app.blueprints.user_blueprint import user_bp
+from app.controllers.user_controller import user_bp
 from app.config import server
 
 app = server.app

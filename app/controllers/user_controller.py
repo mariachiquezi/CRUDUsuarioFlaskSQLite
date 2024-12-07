@@ -7,9 +7,9 @@ user_bp = Blueprint("user", __name__)
 
 # Rota para criar um novo usuário
 @user_bp.route("/usuarios", methods=["POST"])
-def criar_usuario():
+def create_user():
     data = request.json
-    response, status_code = UserService().criar_usuario(data)
+    response, status_code = UserService().create_user(data)
     return jsonify(response), status_code
 
 
