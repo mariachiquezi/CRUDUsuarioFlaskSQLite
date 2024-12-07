@@ -1,14 +1,12 @@
 from flask import current_app
 from sqlalchemy.exc import SQLAlchemyError
-from app.exceptions.user_exceptions import (
-    ValidationError,
-    UniqueConstraintViolationError,
-)
+from app.exceptions.user_exceptions import ValidationError
 from app.repositories.user_repository import UserRepository
 from app.services.cpf_validator import CPFValidator
 from app.services.user_validator import ValidatorService
 from db import db
 from app.models.user_model import UserModel
+from datetime import datetime
 
 
 class UserService:
@@ -19,19 +17,19 @@ class UserService:
         try:
             # Validar dados do usuário (email, CPF, senha e idade)
             password_hash, formatted_cpf, valid = ValidatorService.validate_user_data(
-                data["email"], data["password"], data["cpf"], data["age"]
+                data["email"], data["password_hash"], data["cpf"], data["age"]
             )
             if not valid:
                 raise ValidationError("Dados do usuário inválidos.")
 
             # Criar o usuário
             user = UserModel(**data)
-            user.id = ValidatorService.generate_unique_id(
-                user.cpf
-            )  # Gerar ID único baseado no CPF
+            user.id = ValidatorService.generate_unique_id(user.cpf)  # Gerar ID único baseado no CPF
             data["id"] = user.id
             data["password_hash"] = password_hash
             data["cpf"] = formatted_cpf
+            data["time_created"] = data.get("time_created", datetime.utcnow())  # Data de criação
+            data["time_updated"] = data.get("time_updated", datetime.utcnow())  # Data de atualização
 
             # Chamar o repositório para salvar o usuário no banco de dados
             query = self.repository.create_user()
@@ -87,6 +85,7 @@ class UserService:
             return users, 200  # Retornar lista de usuários com status 200
 
         except Exception as e:
+            current_app.logger.error(f"Erro ao listar usuários: {str(e)}")
             return {
                 "error": str(e)
             }, 400  # Retornar resposta de erro caso a consulta ao banco falhe
@@ -105,6 +104,7 @@ class UserService:
             }, 404  # Retornar erro se o usuário não for encontrado
 
         except Exception as e:
+            current_app.logger.error(f"Erro ao buscar usuário: {str(e)}")
             return {
                 "error": str(e)
             }, 400  # Retornar resposta de erro caso a consulta ao banco falhe
@@ -112,19 +112,20 @@ class UserService:
     def update_user(self, id, data):
         try:
             # Validar dados do usuário (email, CPF, senha e idade)
-            password_hash, cpf, valid = ValidatorService.validate_user_data(
-                data["email"], data["password"], data["cpf"], data["age"]
+            password_hash, formatted_cpf, valid = ValidatorService.validate_user_data(
+                data["email"], data["password_hash"], data["cpf"], data["age"]
             )
             if not valid:
                 raise ValidationError("Dados do usuário inválidos.")
 
-            # Atualizar dados do usuário
-            query = self.repository.update_user()
+            # Preparar os dados para atualização
             data["id"] = id
             data["password_hash"] = password_hash
-            data["cpf"] = cpf
+            data["cpf"] = formatted_cpf
+            data["time_updated"] = data.get("time_updated", datetime.utcnow())  # Atualizar timestamp
 
-            # Salvar dados atualizados no banco de dados
+            # Chamar o repositório para atualizar o usuário no banco de dados
+            query = self.repository.update_user()
             self.repository.save_to_db(query, data)
 
             return {
@@ -136,7 +137,8 @@ class UserService:
 
         except Exception as e:
             db.session.rollback()  # Reverter para garantir integridade
-            return {"error": str(e)}, 400  # Resposta de erro se a atualização falhar
+            current_app.logger.error(f"Erro ao atualizar usuário: {str(e)}")
+            return {"error": str(e)}, 400  # Resposta de erro caso a atualização falhe
 
     def delete_user(self, id):
         try:
@@ -154,6 +156,7 @@ class UserService:
 
         except Exception as e:
             db.session.rollback()  # Reverter para garantir integridade
+            current_app.logger.error(f"Erro ao excluir usuário: {str(e)}")
             return {
                 "error": str(e)
             }, 400  # Retornar resposta de erro se a exclusão falhar
