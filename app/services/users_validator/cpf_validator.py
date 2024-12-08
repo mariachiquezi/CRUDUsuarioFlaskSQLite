@@ -1,5 +1,6 @@
 import re
-from app.exceptions.user_exceptions import ValidationError
+from app.exceptions.validation_error import ValidationError
+from app.utils.id_generator import clean_point
 
 
 class CPFValidator:
@@ -65,19 +66,6 @@ class CPFValidator:
         return self.cpf == calculated_cpf
 
     @staticmethod
-    def clean_cpf(cpf: str) -> str:
-        """
-        Remove caracteres não numéricos do CPF.
-        """
-        return cpf.replace(".", "").replace("-", "")
-
-    @staticmethod
-    def format_cpf(cpf):
-        formatted_cpf = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
-
-        return formatted_cpf
-
-    @staticmethod
     def run(cpf_input: str):
         try:
             # Cria a instância do validador com o CPF limpo
@@ -88,10 +76,13 @@ class CPFValidator:
                 raise ValidationError(
                     "CPF inválido! Por favor, verifique e tente novamente."
                 )
-            cpf_validado_formatado = CPFValidator.clean_cpf(cpf_input)
+
+            # Retorna o CPF validado e formatado
+            cpf_validado_formatado = clean_point(cpf_input)
             print("cpf_validado_formatado", cpf_validado_formatado)
+
             return cpf_validado_formatado
         except ValueError as e:
-            print(e)  # Aqui você pode fazer o tratamento adequado para o erro
+            raise ValidationError(str(e))  # Repassa o erro como ValidationError
         except ValidationError as e:
-            print(e)  # Erro customizado de validação, conforme sua implementação
+            raise e  # Propaga o erro customizado
