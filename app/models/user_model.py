@@ -1,9 +1,6 @@
-import re
-from datetime import datetime
 from db import db
 from sqlalchemy.sql import func
 from db import db
-from app.config import server
 
 
 class UserModel(db.Model):
@@ -13,16 +10,17 @@ class UserModel(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     cpf = db.Column(db.String(11), unique=True, nullable=False)
-    age = db.Column(db.String(3))
+    birth_date = db.Column(db.Date, nullable=True) 
     time_created = db.Column(db.DateTime(timezone=True), server_default=func.now())
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     password_hash = db.Column(db.Text, nullable=False)
 
-    def __init__(self, name, email, age, cpf, password_hash):
+    def __init__(self, id, name, email, birth_date, cpf, password_hash):
+        self.id = id
         self.name = name
         self.email = email
         self.cpf = cpf
-        self.age = age
+        self.birth_date = birth_date
         self.password_hash = password_hash
 
         print("id", self.id)
@@ -30,7 +28,7 @@ class UserModel(db.Model):
 
     def as_dict(self):
         """Converte o objeto UserModel para um dicionário."""
-        return { 
+        return {
             "id": self.id,
             "name": self.name,
             "email": self.email,
