@@ -23,6 +23,12 @@ class ExceptionHandler:
             "error": "Erro desconhecido no banco de dados. "
         }, 500  # Erro genérico de banco de dados
 
+    def handle_database_error(self, error):
+        return {"error": f"Erro de banco de dados: {str(error)}"}, 500
+
+    def handle_generic_error(self, error):
+        return {"error": f"Erro: {str(error)}"}, 400
+
     @staticmethod
     def handle_validation_error(e):
         """Trata erros de validação de dados."""
