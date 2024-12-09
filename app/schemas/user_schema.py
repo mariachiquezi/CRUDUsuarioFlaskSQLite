@@ -1,27 +1,14 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import datetime
 
 
 class UserSchema(BaseModel):
-    id: str
-    cpf: str  # CPF validado no ValidatorService, sem validação adicional aqui
     email: EmailStr
+    name: str
     password_hash: str
-    time_created: datetime
-    time_updated: datetime
+    cpf: str
+    birth_date: str  # Pode ser datetime ou outro formato, se necessário
 
+    # Validação do CPF ou outras regras podem ser adicionadas aqui
     class Config:
         orm_mode = True
-
-
-class UserCreateSchema(BaseModel):
-    name: str  # Incluído para a criação de usuário
-    cpf: str  # Apenas aceita como string; validação acontece no ValidatorService
-    email: EmailStr
-    password_hash: str
-
-
-class UserUpdateSchema(BaseModel):
-    email: Optional[EmailStr]
-    password_hash: Optional[str]
