@@ -1,4 +1,5 @@
 import re
+import bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 from app.exceptions.validation_error import (
     ValidationError,
@@ -29,8 +30,16 @@ class PasswordService:
         """Verifica se a senha fornecida corresponde ao hash armazenado"""
         return check_password_hash(password_hash, password)
 
-    @staticmethod
     def generate_hash(password):
-        """Gera o hash da senha após validá-la"""
-        PasswordService.validate_password(password)
-        return generate_password_hash(password)
+        """
+        Gera um hash para a senha usando bcrypt com fator de custo 12.
+        """
+        password_bytes = password.encode("utf-8")  # Convertendo a senha para bytes
+        salt = bcrypt.gensalt(
+            rounds=12
+        )  # Fator de custo 12 para garantir o formato correto
+        hashed_password = bcrypt.hashpw(password_bytes, salt).decode(
+            "utf-8"
+        )  # Gera e decodifica o hash
+        print(f"Hash gerado: {hashed_password}")
+        return hashed_password
