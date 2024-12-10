@@ -1,72 +1,99 @@
 from flask import Blueprint, request, jsonify
 from app.services.user_service import UserService
-from app.exceptions.exception_handler import ExceptionHandler
-from app.exceptions.validation_error import ValidationError, UniqueConstraintError
+from app.exceptions.error_handler import ErrorHandler
+from app.exceptions.validation_error import ValidationError
+from flask_limiter import Limiter
+from app.exceptions.database_error import UniqueConstraintError
+from flask_limiter.util import get_remote_address
+
+# Inicializando o Limiter diretamente para esse Blueprint
+limiter = Limiter(get_remote_address)
 
 # Define o blueprint para agrupar as rotas de usuário
 user_bp = Blueprint("user", __name__)
 
 
-# Rota para criar um novo usuário
-@user_bp.route("/usuarios", methods=["POST"])
+# Função de tratamento de erro para reduzir repetição
+def handle_request(func):
+    """
+    Wrapper para tratar erros de forma centralizada nas rotas.
+    """
+
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValidationError as e:
+            return ErrorHandler.handle_validation_error(e)
+        except UniqueConstraintError as e:
+            return ErrorHandler.handle_unique_constraint_error(e)
+        except Exception as e:
+            return ErrorHandler.handle_generic_error(e)
+
+    return wrapper
+
+
+# Rota para criar um novo usuário (limitação de 5 requisições por minuto)
+@user_bp.route("/usuarios", methods=["POST"], endpoint="create_user")
+@limiter.limit("5 per minute")
+@handle_request
 def create_user():
-    try:
-        data = request.json
-        response, status_code = UserService().create_user(data)
-        return jsonify(response), status_code
-    except ValidationError as e:
-        # Erro de validação (como CPF ou Email inválido)
-        return ExceptionHandler.handle_validation_error(e)
-    except UniqueConstraintError as e:
-        # Erro de violação de unicidade (CPF ou Email já existe)
-        return ExceptionHandler.handle_unique_constraint_error(e)
-    except Exception as e:
-        # Erro genérico não tratado
-        return ExceptionHandler.handle_generic_error(e)
+    """
+    Cria um novo usuário com base nas informações fornecidas na requisição.
+    Aplica limitação de requisições e trata erros específicos.
+    """
+    data = request.json
+    response, status_code = UserService().create_user(data)
+    return jsonify(response), status_code
 
 
-# Rota para listar todos os usuários
-@user_bp.route("/usuarios", methods=["GET"])
+# Rota para listar todos os usuários (limitação de 10 requisições por hora)
+@user_bp.route("/usuarios", methods=["GET"], endpoint="list_users")
+@limiter.limit("10 per hour")
+@handle_request
 def list_users():
-    try:
-        response = UserService().list_users()
-        return jsonify(response)
-    except Exception as e:
-        # Erro genérico no serviço de usuários
-        return ExceptionHandler.handle_generic_error(e)
+    """
+    Lista todos os usuários registrados.
+    Aplica limitação de requisições e trata erros específicos.
+    """
+    response = UserService().list_users()
+    return jsonify(response)
 
 
-# Rota para obter um único usuário pelo ID
-@user_bp.route("/usuarios/<string:id>", methods=["GET"])
+# Rota para obter um único usuário pelo ID (limitação de 5 requisições por minuto)
+@user_bp.route("/usuarios/<string:id>", methods=["GET"], endpoint="get_user")
+@limiter.limit("5 per minute")
+@handle_request
 def get_user(id):
-    try:
-        response, status_code = UserService().get_user(id)
-        return jsonify(response), status_code
-    except Exception as e:
-        # Erro genérico ao buscar o usuário
-        return ExceptionHandler.handle_generic_error(e)
+    """
+    Obtém as informações de um usuário específico pelo seu ID.
+    Aplica limitação de requisições e trata erros específicos.
+    """
+    response, status_code = UserService().get_user(id)
+    return jsonify(response), status_code
 
 
-# Rota para atualizar um usuário existente
-@user_bp.route("/usuarios/<string:id>", methods=["PUT"])
+# Rota para atualizar um usuário existente (limitação de 3 requisições por minuto)
+@user_bp.route("/usuarios/<string:id>", methods=["PUT"], endpoint="update_user")
+@limiter.limit("3 per minute")
+@handle_request
 def update_user(id):
-    try:
-        data = request.json
-        response, status_code = UserService().update_user(id, data)
-        return jsonify(response), status_code
-    except ValidationError as e:
-        return ExceptionHandler.handle_validation_error(e)
-    except UniqueConstraintError as e:
-        return ExceptionHandler.handle_unique_constraint_error(e)
-    except Exception as e:
-        return ExceptionHandler.handle_generic_error(e)
+    """
+    Atualiza as informações de um usuário específico.
+    Aplica limitação de requisições e trata erros específicos.
+    """
+    data = request.json
+    response, status_code = UserService().update_user(id, data)
+    return jsonify(response), status_code
 
 
-# Rota para deletar um usuário
-@user_bp.route("/usuarios/<string:id>", methods=["DELETE"])
+# Rota para deletar um usuário (limitação de 2 requisições por minuto)
+@user_bp.route("/usuarios/<string:id>", methods=["DELETE"], endpoint="delete_user")
+@limiter.limit("2 per minute")
+@handle_request
 def delete_user(id):
-    try:
-        response, status_code = UserService().delete_user(id)
-        return jsonify(response), status_code
-    except Exception as e:
-        return ExceptionHandler.handle_generic_error(e)
+    """
+    Deleta um usuário com base no ID fornecido.
+    Aplica limitação de requisições e trata erros específicos.
+    """
+    response, status_code = UserService().delete_user(id)
+    return jsonify(response), status_code
