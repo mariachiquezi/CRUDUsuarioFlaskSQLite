@@ -7,7 +7,6 @@ from app.exceptions.validation_error import (
 
 
 class PasswordService:
-    @staticmethod
     def validate_password(password):
         """Valida se a senha atende aos requisitos mínimos"""
         if (

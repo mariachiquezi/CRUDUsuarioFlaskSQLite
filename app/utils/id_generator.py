@@ -3,7 +3,6 @@ import time
 from app.utils.format import clean_point
 
 
-@staticmethod
 def generate_unique_id(cpf):
     # Get the last 4 digits of the CPF
     last_cpf_digits = cpf[-4:]

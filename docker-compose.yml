@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    volumes:
+      - .:/app
+      - ./instance:/app/instance  # Garantir que a pasta instance seja mapeada
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_APP=app.py  # Ou o nome do arquivo principal do seu app Flask
+      - FLASK_ENV=development
