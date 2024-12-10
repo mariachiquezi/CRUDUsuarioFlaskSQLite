@@ -46,7 +46,7 @@ class CPFValidator:
         ten_digits = nine_digits + str(self.digit_1)
         self.digit_2 = self.calculate_check_digit(ten_digits, 11)
 
-    def validate(self) -> bool:
+    def validate_cpf(self) -> bool:
         """
         Valida o CPF completo (verifica se os dígitos calculados correspondem aos fornecidos).
         """
@@ -72,7 +72,7 @@ class CPFValidator:
             validator = CPFValidator(cpf_input)
 
             # Valida o CPF
-            if not validator.validate():
+            if not validator.validate_cpf():
                 raise ValidationError(
                     "CPF inválido! Por favor, verifique e tente novamente."
                 )

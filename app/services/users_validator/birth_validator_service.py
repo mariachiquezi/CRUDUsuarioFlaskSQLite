@@ -1,51 +1,92 @@
 from datetime import datetime
-from app.exceptions.validation_error import ValidationError
 
-class AgeValidatorService:
+
+class BirthDateValidator:
+    """
+    Classe para validar datas de aniversário e verificar se a idade está no intervalo permitido.
+    """
+
+    MIN_AGE = 18
+    MAX_AGE = 110
+
     @staticmethod
-    def validate_age(birth_date_obj: datetime):
+    def normalize_date_format(birth_date: str) -> str:
         """
-        Valida a idade com base na data de nascimento. A idade deve ser entre 18 e 110 anos.
+        Normaliza o formato da data para usar '-' como separador.
+
+        :param birth_date: Data de nascimento como string ('DD-MM-YYYY' ou 'DD/MM/YYYY').
+        :return: Data com separador normalizado ('DD-MM-YYYY').
+        """
+        return birth_date.replace("/", "-")
+
+    @staticmethod
+    def parse_birth_date(birth_date: str) -> datetime:
+        """
+        Converte a data de nascimento em um objeto datetime.
+
+        :param birth_date: Data de nascimento em formato string ('DD-MM-YYYY').
+        :return: Objeto datetime representando a data de nascimento.
+        :raises ValueError: Se o formato da data estiver incorreto.
+        """
+        try:
+            return datetime.strptime(birth_date, "%d-%m-%Y")
+        except ValueError:
+            raise ValueError(
+                "Data de nascimento inválida. O formato esperado é 'DD-MM-YYYY' ou 'DD/MM/YYYY'."
+            )
+
+    @staticmethod
+    def validate_age(birth_date_obj: datetime) -> None:
+        """
+        Verifica se a idade está no intervalo permitido.
+
         :param birth_date_obj: Objeto datetime representando a data de nascimento.
-        :raises ValidationError: Se a idade não estiver entre 18 e 110 anos.
+        :raises ValueError: Se a idade estiver fora do intervalo permitido.
         """
-        age = AgeValidatorService.calculate_age(birth_date_obj)
-        if not (18 <= age <= 110):
-            raise ValidationError("Idade inválida. A idade deve ser entre 18 e 110 anos.")
+        age = BirthDateValidator.calculate_age(birth_date_obj)
+        if age < BirthDateValidator.MIN_AGE or age > BirthDateValidator.MAX_AGE:
+            raise ValueError(
+                f"Idade fora do intervalo permitido ({BirthDateValidator.MIN_AGE}-{BirthDateValidator.MAX_AGE})."
+            )
+
+    @staticmethod
+    def format_date_to_db(birth_date_obj: datetime) -> str:
+        """
+        Formata a data de nascimento no formato 'YYYY-MM-DD'.
+
+        :param birth_date_obj: Objeto datetime representando a data de nascimento.
+        :return: Data formatada como string.
+        """
+        return birth_date_obj.strftime("%Y-%m-%d")
 
     @staticmethod
     def calculate_age(birth_date_obj: datetime) -> int:
         """
         Calcula a idade com base na data de nascimento.
+
         :param birth_date_obj: Objeto datetime representando a data de nascimento.
-        :return: A idade em anos.
+        :return: Idade calculada.
         """
         today = datetime.today()
-        age = today.year - birth_date_obj.year
-        if today.month < birth_date_obj.month or (today.month == birth_date_obj.month and today.day < birth_date_obj.day):
-            age -= 1
+        age = (
+            today.year
+            - birth_date_obj.year
+            - ((today.month, today.day) < (birth_date_obj.month, birth_date_obj.day))
+        )
         return age
 
-
     @staticmethod
-    def format_birth_date(birth_date: str) -> str:
+    def validate_and_format_birth_date(birth_date: str) -> str:
         """
-        Formata uma data de nascimento de 'D-M-A' para 'AAAA-MM-DD'.
+        Valida e formata a data de nascimento.
 
-        :param birth_date: Data em formato string ('D-M-A').
-        :return: Data formatada para 'YYYY-MM-DD'.
-        :raises ValidationError: Se a data não estiver no formato esperado.
+        :param birth_date: Data de nascimento em formato string ('DD-MM-YYYY' ou 'DD/MM/YYYY').
+        :return: Data formatada no formato 'YYYY-MM-DD'.
+        :raises ValueError: Se a data não for válida ou a idade estiver fora do intervalo permitido.
         """
-        try:
-            # Usando o formato correto para data
-            birth_date_obj = datetime.strptime(birth_date, "%d-%m-%Y")
-            
-            # Retornar a data formatada para 'YYYY-MM-DD'
-            return birth_date_obj.strftime("%Y-%m-%d")
-        except ValueError:
-            raise ValidationError(
-                "Data de nascimento inválida. O formato esperado é 'DD-MM-AAAA'."
-            )
-
+        normalized_date = BirthDateValidator.normalize_date_format(birth_date)
+        birth_date_obj = BirthDateValidator.parse_birth_date(normalized_date)
+        BirthDateValidator.validate_age(birth_date_obj)
+        return BirthDateValidator.format_date_to_db(birth_date_obj)
 
 
