@@ -8,7 +8,7 @@ from app.services.users_validator.password_validator_service import PasswordServ
 
 class UserDataValidatorService:
     @staticmethod
-    def validate_data(email, password, cpf, birth_date):
+    def validate_data(data):
         """
         Valida os dados do usuário: email, senha, CPF e data de nascimento.
         :param email: O email do usuário.
@@ -17,6 +17,10 @@ class UserDataValidatorService:
         :param birth_date: A data de nascimento do usuário (formato 'DD-MM-YYYY').
         :return: Tuple com a senha hash, CPF formatado, data de nascimento formatada e um status True se todos os dados forem válidos.
         """
+        email = data["email"]
+        password= data["password_hash"]
+        cpf = data["cpf"]
+        birth_date = data["birth_date"]
         # Validar o email
         EmailValidatorService.validate_email(email)
         print("data", birth_date)

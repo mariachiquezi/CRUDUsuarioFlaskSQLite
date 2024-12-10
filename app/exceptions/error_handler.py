@@ -18,11 +18,28 @@ class ErrorHandler:
 
     @staticmethod
     def handle_database_error(e):
-        logging.error(f"Erro de banco de dados: {str(e)}")
-        return (
-            jsonify({"error": str(e)}),
-            500,
-        )  # Retorna erro 500 para falha no banco de dados
+        """Trata erros de banco de dados, como violação de chave única e outros erros do SQLAlchemy."""
+        # Verificar se o erro é uma instância de ValidationError
+        if isinstance(e, ValidationError):
+            logging.error(f"Erro de validação: {str(e)}")
+            return {"error": str(e)}, 400  # Retorna erro 400 para validações de dados
+        # Captura o erro original de SQLAlchemy
+        error_str = str(e.__cause__)
+        if "UNIQUE constraint failed" in error_str:
+            if "Users.email" in error_str:
+                message = "O email já está registrado."
+            elif "Users.cpf" in error_str:
+                message = "O CPF já está registrado."
+            else:
+                message = "CPF ou Email já estão registrados."
+            logging.error(f"Erro de violação de unicidade: {message}")
+            return {"error": message}, 409  # Retorna erro 409 para conflitos de dados
+        # Caso o erro não seja de unicidade
+        logging.error(f"Erro inesperado no banco de dados: {str(e)}")
+        return {
+            "error": "Erro desconhecido no banco de dados."
+        }, 500  # Erro genérico para banco de dados
+        # Erro genérico de banco de dados
 
     @staticmethod
     def handle_rate_limit_error(e):
