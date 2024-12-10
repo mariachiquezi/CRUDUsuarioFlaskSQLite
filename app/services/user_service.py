@@ -2,7 +2,6 @@
 from app.exceptions.exception_handler import ExceptionHandler
 from app.exceptions.validation_error import UniqueConstraintError, ValidationError
 from app.repositories.user_repository import UserRepository
-from app.services.users_validator.birth_validator_service import BirthFormatter
 from app.services.users_validator.user_data_validator_service import (
     UserDataValidatorService,
 )
@@ -14,11 +13,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 class UserService:
     def __init__(self):
-        self.repository = UserRepository()
         self.validation_service = UserDataValidatorService()
-        self.format_date = BirthFormatter()
         self.generate_unique_id = generate_unique_id
-        self.error_handler = ExceptionHandler()
 
     def create_user(self, data):
         """Cria um novo usuário com base nos dados recebidos."""
@@ -32,33 +28,33 @@ class UserService:
     def get_user_by_id(self, user_id):
         """Obtém os dados de um usuário pelo ID."""
         try:
-            user = self.repository.get_user_by_id(user_id)
+            user = UserRepository.get_user_by_id(user_id)
             if user:
                 return {"user": user}, 200
             return {"message": "Usuário não encontrado"}, 404
         except Exception as e:
-            return self.error_handler.handle_generic_error(e)
+            return ExceptionHandler.handle_generic_error(e)
 
     def list_users(self):
         """Obtém os dados de um usuário pelo CPF."""
         try:
-            user = self.repository.list_users()
+            user = UserRepository.list_users()
             if user:
                 return {"user": user}, 200
             return {"message": "Usuário não encontrado"}, 404
         except Exception as e:
-            return self.error_handler.handle_generic_error(e)
+            return ExceptionHandler.handle_generic_error(e)
 
     def delete_user(self, user_id):
         """Deleta um usuário pelo ID."""
         try:
-            user = self.repository.get_user_by_id(user_id)
+            user = UserRepository.get_user_by_id(user_id)
             if user:
-                self.repository.delete_user(user_id)
+                UserRepository.delete_user(user_id)
                 return {"message": "Usuário excluído com sucesso!"}, 200
             return {"message": "Usuário não encontrado"}, 404
         except Exception as e:
-            return self.error_handler.handle_generic_error(e)
+            return ExceptionHandler.handle_generic_error(e)
 
     def _save_user(self, data, action):
         """
@@ -74,16 +70,18 @@ class UserService:
 
             # Salva ou atualiza no banco de dados
             if action == "create":
-                self.repository.create_user(user_data)
+                UserRepository.create_user(user_data)
                 return {"message": "Usuário criado com sucesso!"}, 201
             elif action == "update":
-                self.repository.update_user(user_data)
+                UserRepository.update_user(user_data)
                 return {"message": "Usuário atualizado com sucesso!"}, 200
 
-        except (ValidationError, UniqueConstraintError, SQLAlchemyError) as e:
-            return self.error_handler.handle_database_error(e)
+        except (UniqueConstraintError, SQLAlchemyError) as e:
+            return ExceptionHandler.handle_database_error(e)
+        except ValidationError as e:  # Captura erros de validação de maneira específica
+                return {"error": str(e)}, 400 
         except Exception as e:
-            return self.error_handler.handle_generic_error(e)
+            return ExceptionHandler.handle_generic_error(e)
 
     def _validate_data(self, data):
         """Valida os dados do usuário utilizando o schema."""

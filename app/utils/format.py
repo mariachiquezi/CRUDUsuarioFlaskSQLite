@@ -1,8 +1,6 @@
 from datetime import datetime
 import pytz
 
-
-@staticmethod
 def clean_point(value):
     return value.replace(".", "").replace("-", "")
 
@@ -10,8 +8,6 @@ def clean_point(value):
 from datetime import datetime
 import pytz
 
-
-@staticmethod
 def get_current_timestamp():
     """
     Retorna o timestamp atual ajustado para o fuso horário de Brasília.
@@ -26,7 +22,6 @@ import pytz
 
 
 class DateTimeUtils:
-    @staticmethod
     def convert_to_timezone(dt, target_timezone="UTC"):
         """
         Converte uma data/hora para o fuso horário desejado.
@@ -58,7 +53,6 @@ class DateTimeUtils:
 
         return converted_time.strftime("%Y-%m-%d %H:%M:%S")
 
-    @staticmethod
     def adjust_times_for_dict(data, target_timezone="UTC"):
         """
         Ajusta os campos de data em um dicionário para o fuso horário desejado.
@@ -76,8 +70,6 @@ class DateTimeUtils:
                 )
         return data
 
-
-@staticmethod
 def format_cpf(cpf):
     formatted_cpf = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
 

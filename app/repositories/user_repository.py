@@ -9,7 +9,6 @@ from app.utils.format import DateTimeUtils  # Importa a classe onde est√° a fun√
 
 class UserRepository:
 
-    @staticmethod
     def create_user(user_data):
         query = text(
             """
@@ -19,7 +18,6 @@ class UserRepository:
         )
         UserRepository.save_to_db(query, user_data)
 
-    @staticmethod
     def update_user(user_data):
         query = text(
             """
@@ -34,7 +32,6 @@ class UserRepository:
         )
         UserRepository.save_to_db(query, user_data)
 
-    @staticmethod
     def get_user_by_id(user_id):
         query = text(
             """
@@ -45,7 +42,6 @@ class UserRepository:
         result = db.session.execute(query, {"id": user_id}).fetchone()
         return result
 
-    @staticmethod
     def list_users():
         query = text(
             """
@@ -56,13 +52,11 @@ class UserRepository:
         result = db.session.execute(query).fetchall()
         return [dict(row._mapping) for row in result]
 
-    @staticmethod
     def delete_user(user_id):
         query = text("DELETE FROM Users WHERE id = :id")
         db.session.execute(query, {"id": user_id})
         db.session.commit()
 
-    @staticmethod
     def save_to_db(query, data):
         try:
             # Garantir que as datas sejam convertidas antes de salvar no banco
