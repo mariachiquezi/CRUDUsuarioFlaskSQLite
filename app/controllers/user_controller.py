@@ -32,7 +32,10 @@ def handle_request(func):
 
 # Rota para criar um novo usuário (limitação de 5 requisições por minuto)
 @user_bp.route("/usuarios", methods=["POST"], endpoint="create_user")
-@limiter.limit("5 per minute")
+@limiter.limit(
+    "5 per minute",
+    error_message="Limite de requisições excedido. Por favor, aguarde e tente novamente em breve.",
+)
 @handle_request
 def create_user():
     """
@@ -44,9 +47,12 @@ def create_user():
     return jsonify(response), status_code
 
 
-# Rota para listar todos os usuários (limitação de 10 requisições por hora)
+# Rota para listar todos os usuários (limitação de 5 requisições por hora)
 @user_bp.route("/usuarios", methods=["GET"], endpoint="list_users")
-@limiter.limit("5 per minute", error_message="Muitas requisições para listar usuários! Aguarde 1 minuto e tente novamente.")
+@limiter.limit(
+    "5 per minute",
+    error_message="Limite de requisições excedido. Por favor, aguarde e tente novamente em breve.",
+)
 @handle_request
 def list_users():
     """
@@ -57,9 +63,12 @@ def list_users():
     return jsonify(response)
 
 
-# Rota para obter um único usuário pelo ID (limitação de 5 requisições por minuto)
+# Rota para obter um único usuário pelo ID (limitação de 10 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["GET"], endpoint="get_user")
-@limiter.limit("10 per minute", error_message="Você está tentando acessar informações de usuários muito rapidamente! Espere um momento.")
+@limiter.limit(
+    "10 per minute",
+    error_message="Limite de requisições excedido. Por favor, aguarde e tente novamente em breve.",
+)
 @handle_request
 def get_user(id):
     """
@@ -72,7 +81,10 @@ def get_user(id):
 
 # Rota para atualizar um usuário existente (limitação de 3 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["PUT"], endpoint="update_user")
-@limiter.limit("2 per minute", error_message="Muitas requisições para atualizar usuários! Aguarde 1 minuto.")
+@limiter.limit(
+    "3 per minute",
+    error_message="Limite de requisições excedido. Por favor, aguarde e tente novamente em breve.",
+)
 @handle_request
 def update_user(id):
     """
@@ -84,9 +96,12 @@ def update_user(id):
     return jsonify(response), status_code
 
 
-# Rota para deletar um usuário (limitação de 2 requisições por minuto)
+# Rota para deletar um usuário (limitação de 6 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["DELETE"], endpoint="delete_user")
-@limiter.limit("2 per minute", error_message="Você excedeu o limite para deletar usuários. Tente novamente em 1 minuto.")
+@limiter.limit(
+    "5 per minute",
+    error_message="Limite de requisições excedido. Por favor, aguarde e tente novamente em breve.",
+)
 @handle_request
 def delete_user(id):
     """
