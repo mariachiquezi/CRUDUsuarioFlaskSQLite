@@ -26,9 +26,6 @@ class UserModel(db.Model):
         self.birth_date = birth_date
         self.password_hash = password_hash
 
-        print("id", self.id)
-        print("senha", self.password_hash)
-
     __table_args__ = (
         Index("ix_users_name", "name"),
         Index("ix_users_cpf", "cpf"),

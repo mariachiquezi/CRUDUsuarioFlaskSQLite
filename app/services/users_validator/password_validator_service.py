@@ -23,7 +23,8 @@ class PasswordService:
         """Gera o hash da senha e o retorna após validação"""
         if not PasswordService.validate_password(password):
             raise ValueError("A senha não atende aos requisitos de segurança.")
-        return generate_password_hash(password)
+        generate_hash = PasswordService.generate_hash(password)
+        return generate_hash
 
     def check_password(password, password_hash):
         """Verifica se a senha fornecida corresponde ao hash armazenado"""
@@ -34,11 +35,6 @@ class PasswordService:
         Gera um hash para a senha usando bcrypt com fator de custo 12.
         """
         password_bytes = password.encode("utf-8")  # Convertendo a senha para bytes
-        salt = bcrypt.gensalt(
-            rounds=12
-        )  # Fator de custo 12 para garantir o formato correto
-        hashed_password = bcrypt.hashpw(password_bytes, salt).decode(
-            "utf-8"
-        )  # Gera e decodifica o hash
-        print(f"Hash gerado: {hashed_password}")
+        salt = bcrypt.gensalt(rounds=12)
+        hashed_password = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
         return hashed_password

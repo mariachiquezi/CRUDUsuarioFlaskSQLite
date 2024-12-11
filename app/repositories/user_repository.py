@@ -32,7 +32,7 @@ class UserRepository:
         )
         UserRepository.save_to_db(query, user_data)
 
-    def get_user_by_id(user_id):
+    def get_user(user_id):
         query = text(
             """
             SELECT id, name, birth_date, cpf, email, time_created, time_updated
@@ -40,6 +40,7 @@ class UserRepository:
             """
         )
         result = db.session.execute(query, {"id": user_id}).fetchone()
+        
         return result
 
     def list_users():
@@ -60,12 +61,6 @@ class UserRepository:
     def save_to_db(query, data):
         try:
             # Garantir que as datas sejam convertidas antes de salvar no banco
-            print ("data",data)
-            if isinstance(data, dict):
-                data = DateTimeUtils.adjust_times_for_dict(
-                    data, target_timezone="America/Sao_Paulo"
-                )
-
             db.session.execute(query, data)
             db.session.commit()
         except Exception as e:
