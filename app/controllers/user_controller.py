@@ -2,12 +2,10 @@ from flask import Blueprint, request, jsonify
 from app.services.user_service import UserService
 from app.exceptions.error_handler import ErrorHandler
 from app.exceptions.validation_error import ValidationError
-from flask_limiter import Limiter
 from app.exceptions.database_error import UniqueConstraintError
-from flask_limiter.util import get_remote_address
+from app.limiter import limiter
 
 # Inicializando o Limiter diretamente para esse Blueprint
-limiter = Limiter(get_remote_address)
 
 # Define o blueprint para agrupar as rotas de usuário
 user_bp = Blueprint("user", __name__)
@@ -48,7 +46,7 @@ def create_user():
 
 # Rota para listar todos os usuários (limitação de 10 requisições por hora)
 @user_bp.route("/usuarios", methods=["GET"], endpoint="list_users")
-@limiter.limit("10 per hour")
+@limiter.limit("5 per minute", error_message="Muitas requisições para listar usuários! Aguarde 1 minuto e tente novamente.")
 @handle_request
 def list_users():
     """
@@ -61,7 +59,7 @@ def list_users():
 
 # Rota para obter um único usuário pelo ID (limitação de 5 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["GET"], endpoint="get_user")
-@limiter.limit("5 per minute")
+@limiter.limit("10 per minute", error_message="Você está tentando acessar informações de usuários muito rapidamente! Espere um momento.")
 @handle_request
 def get_user(id):
     """
@@ -74,7 +72,7 @@ def get_user(id):
 
 # Rota para atualizar um usuário existente (limitação de 3 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["PUT"], endpoint="update_user")
-@limiter.limit("3 per minute")
+@limiter.limit("2 per minute", error_message="Muitas requisições para atualizar usuários! Aguarde 1 minuto.")
 @handle_request
 def update_user(id):
     """
@@ -88,7 +86,7 @@ def update_user(id):
 
 # Rota para deletar um usuário (limitação de 2 requisições por minuto)
 @user_bp.route("/usuarios/<string:id>", methods=["DELETE"], endpoint="delete_user")
-@limiter.limit("2 per minute")
+@limiter.limit("2 per minute", error_message="Você excedeu o limite para deletar usuários. Tente novamente em 1 minuto.")
 @handle_request
 def delete_user(id):
     """
