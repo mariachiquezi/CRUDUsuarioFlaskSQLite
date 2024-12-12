@@ -29,6 +29,7 @@ class BirthDateValidator:
         :raises ValueError: Se o formato da data estiver incorreto.
         """
         try:
+            print("date", birth_date)
             return datetime.strptime(birth_date, "%d-%m-%Y")
         except ValueError:
             raise ValueError(

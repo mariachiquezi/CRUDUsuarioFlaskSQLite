@@ -3,6 +3,7 @@ from app.models.user_model import UserModel
 from app.services.users_validator.user_data_validator_service import (
     UserDataValidatorService,
 )
+from app.utils.format_cpf import clean_point
 from app.utils.format_date import get_current_timestamp
 from app.utils.id_generator import generate_unique_id
 
@@ -17,26 +18,36 @@ def validate_data(data):
         raise ValidationError(f"Erro de validação: {str(e)}")
 
 
-def prepare_user_data(validated_data, user_id=None):
-    """
-    Prepara os dados do usuário para criação ou atualização.
-    """
-    password_hash, formatted_cpf, formatted_birth_date, valid = (
-        UserDataValidatorService.validate_data(validated_data)
+def prepare_user_data(data, action):
+    print(data)
+    validated_data = UserDataValidatorService.validate_data(
+        data, is_update=(action == "update")
     )
-    if not valid:
-        raise ValidationError("Dados do usuário inválidos.")
-
-    # Prepare o dicionário de dados do usuário
+    print("validated_data", validate_data)
     user_data = {
-        "password_hash": password_hash,
-        "name": validated_data.get("name"),  # Acessando o atributo diretamente
-        "cpf": formatted_cpf,
-        "email": validated_data.get("email"),
-        "birth_date": formatted_birth_date,
-        "id": user_id or generate_unique_id(formatted_cpf),
-        "time_created": get_current_timestamp(),  # Ajuste do timestamp
+        "name": data.get("name") if data.get("name") else None,
+        "cpf": (
+            clean_point(validated_data.get("cpf"))
+            if validated_data.get("cpf")
+            else None
+        ),
+        "id": (
+            generate_unique_id(validated_data.get("cpf"))
+            if action == "create"
+            else data.get("id")
+        ),
+        "email": validated_data.get("email") if validated_data.get("email") else None,
+        "birth_date": (
+            validated_data.get("birth_date")
+            if validated_data.get("birth_date")
+            else None
+        ),
+        "password_hash": (
+            validated_data.get("password_hash")
+            if validated_data.get("password_hash")
+            else None
+        ),
+        "time_created": get_current_timestamp() if action == "create" else None,
         "time_updated": get_current_timestamp(),
     }
-
     return user_data

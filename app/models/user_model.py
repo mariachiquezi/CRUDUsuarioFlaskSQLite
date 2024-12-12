@@ -18,13 +18,18 @@ class UserModel(db.Model):
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     password_hash = db.Column(db.Text, nullable=False)
 
-    def __init__(self, id, name, email, birth_date, cpf, password_hash):
+    def __init__(
+        self, id, name, email, birth_date, cpf, password_hash=None, time_created=None, time_updated=None
+    ):
         self.id = id
         self.name = name
         self.email = email
         self.cpf = cpf
         self.birth_date = birth_date
         self.password_hash = password_hash
+        self.time_created = time_created
+        self.time_updated = time_updated
+
 
     __table_args__ = (
         Index("ix_users_name", "name"),

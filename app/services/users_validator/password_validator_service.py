@@ -8,6 +8,7 @@ from app.exceptions.validation_error import (
 
 class PasswordService:
     def validate_password(password):
+        print("password", password)
         """Valida se a senha atende aos requisitos mínimos"""
         if (
             len(password) < 8
