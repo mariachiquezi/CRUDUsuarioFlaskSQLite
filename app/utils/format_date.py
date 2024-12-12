@@ -1,12 +1,6 @@
 from datetime import datetime
 import pytz
 
-def clean_point(value):
-    return value.replace(".", "").replace("-", "")
-
-
-from datetime import datetime
-import pytz
 
 def get_current_timestamp():
     """
@@ -15,10 +9,6 @@ def get_current_timestamp():
     utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
     br_tz = pytz.timezone("America/Sao_Paulo")
     return utc_now.astimezone(br_tz).strftime("%Y-%m-%d %H:%M:%S")  # Formatando a data
-
-
-from datetime import datetime
-import pytz
 
 
 class DateTimeUtils:
@@ -69,8 +59,3 @@ class DateTimeUtils:
                     data[key], target_timezone
                 )
         return data
-
-def format_cpf(cpf):
-    formatted_cpf = f"{cpf[:3]}.{cpf[3:6]}.{cpf[6:9]}-{cpf[9:]}"
-
-    return formatted_cpf

@@ -1,6 +1,6 @@
 import re
 from app.exceptions.validation_error import ValidationError
-from app.utils.id_generator import clean_point
+from app.utils.format_cpf import clean_point
 
 
 class CPFValidator:

@@ -1,6 +1,6 @@
 import time
 
-from app.utils.format import clean_point
+from app.utils.format_cpf import clean_point
 
 
 def generate_unique_id(cpf):

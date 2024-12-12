@@ -3,7 +3,7 @@ from app.models.user_model import UserModel
 from app.services.users_validator.user_data_validator_service import (
     UserDataValidatorService,
 )
-from app.utils.format import get_current_timestamp
+from app.utils.format_date import get_current_timestamp
 from app.utils.id_generator import generate_unique_id
 
 

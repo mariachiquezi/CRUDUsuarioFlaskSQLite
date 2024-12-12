@@ -4,7 +4,7 @@ from db import db
 import pytz
 
 # Supondo que você tenha uma classe DateTimeUtils com o método convert_to_timezone.
-from app.utils.format import DateTimeUtils  # Importa a classe onde está a função de conversão
+from app.utils.format_date import DateTimeUtils  # Importa a classe onde está a função de conversão
 
 
 class UserRepository:

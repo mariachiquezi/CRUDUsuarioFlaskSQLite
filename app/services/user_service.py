@@ -9,6 +9,7 @@ from app.services.users_validator.validation_service.validation_service import (
     prepare_user_data,
     validate_data,
 )
+from app.utils.format_cpf import format_cpf
 from app.utils.id_generator import generate_unique_id
 from sqlalchemy.exc import SQLAlchemyError
 from app.exceptions.error_handler import ErrorHandler
@@ -34,10 +35,14 @@ class UserService:
         try:
             user = UserRepository.get_user(user_id)
             if user:
-
+                # Converte os dados para dicionário
                 user_dict = dict(zip(COLUMN_NAMES, user))
 
+                # Formata o CNPJ antes de retornar
+                user_dict["cpf"] = format_cpf(user_dict["cpf"])  # Aqui você chama a função para formatar o CPF (ou CNPJ, dependendo da função)
+
                 return {"user": user_dict}, 200
+            return {"message": "Usuário não encontrado"}, 404
         except Exception as e:
             return ErrorHandler.handle_generic_error(e)
 
@@ -46,12 +51,18 @@ class UserService:
         try:
             users = UserRepository.list_users()
             if users:
-                print("users", users)
-                # Converte a lista de objetos do modelo UserModel para dicionários
-                return {"users": [user for user in users]}, 200
+                # Converte a lista de usuários para dicionários
+                formatted_users = []
+                for user in users:
+                    user_dict = dict(zip(COLUMN_NAMES, user))
+                    user_dict["cpf"] = format_cpf(user_dict["cpf"])  # Aplica a formatação no CNPJ ou CPF
+                    formatted_users.append(user_dict)
+
+                return {"users": formatted_users}, 200
             return {"message": "Nenhum usuário encontrado"}, 404
         except Exception as e:
             return ErrorHandler.handle_generic_error(e)
+
 
     def delete_user(self, user_id):
         """Deleta um usuário pelo ID."""

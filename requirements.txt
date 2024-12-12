@@ -33,3 +33,4 @@ bcrypt
 pydantic
 pydantic[email]
 Flask-Limiter
+pytest
