@@ -24,8 +24,6 @@ def handle_request(func):
             return ErrorHandler.handle_validation_error(e)
         except UniqueConstraintError as e:
             return ErrorHandler.handle_unique_constraint_error(e)
-        except Exception as e:
-            return ErrorHandler.handle_generic_error(e)
 
     return wrapper
 

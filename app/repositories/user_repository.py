@@ -1,56 +1,67 @@
 from sqlalchemy import text
+from app.exceptions.database_error import UniqueConstraintError
 from db import db
 
 
 class UserRepository:
     @staticmethod
     def create_user(user_data):
-        UserRepository._execute_query(
+        try:
+            query = """
+                INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
+                VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
             """
-            INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
-            VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
-            """,
-            user_data,
-        )
+            UserRepository._execute_query(query, user_data)
+            return True
+        except Exception as e:
+            if "UNIQUE constraint failed" in str(e.orig):
+                raise UniqueConstraintError("CPF ou Email já estão registrados.")
+            raise e
 
     @staticmethod
     def update_user(user_data):
-        # Filtrar valores None
-        filtered_data = {key: value for key, value in user_data.items() if value is not None}
-        set_clauses = ", ".join(f"{key} = :{key}" for key in filtered_data if key != "id")
+        print("user1", user_data)
+        filtered_data = {
+            key: value for key, value in user_data.items() if value is not None
+        }
+        print("fileto0", filtered_data)
+        set_clauses = ", ".join(
+            f"{key} = :{key}" for key in filtered_data if key != "id"
+        )
         query = f"UPDATE Users SET {set_clauses} WHERE id = :id"
         UserRepository._execute_query(query, filtered_data)
 
-
     @staticmethod
     def check_duplicate_user(cpf=None, email=None):
-        query = text(
-            """
-        SELECT 1 FROM Users WHERE cpf = :cpf OR email = :email LIMIT 1
-        """
-        )
+        query = text("""
+            SELECT id, cpf, email FROM Users WHERE cpf = :cpf OR email = :email LIMIT 1
+        """)
         result = db.session.execute(query, {"cpf": cpf, "email": email}).fetchone()
-        return result is not None
+        if result:
+            result_dict = {key: value for key, value in result._mapping.items()}
+            return result_dict
+        return None
 
     @staticmethod
     def get_user(user_id):
-        query = text(
-            """
-        SELECT id, name, birth_date, cpf, email, time_created, time_updated
-        FROM Users WHERE id = :id
-        """
-        )
-        return db.session.execute(query, {"id": user_id}).fetchone()
+        query = text("""
+            SELECT id, name, birth_date, cpf, email, time_created, time_updated
+            FROM Users WHERE id = :id
+        """)
+        result = db.session.execute(query, {"id": user_id}).fetchone()
+        if result:
+            result_dict = {key: value for key, value in result._mapping.items()}
+            return result_dict
+        return None
 
     @staticmethod
     def list_users():
-        query = text(
-            """
-        SELECT id, name, birth_date, cpf, email, time_created, time_updated
-        FROM Users
+        query = """
+            SELECT id, name, birth_date, cpf, email, time_created, time_updated
+            FROM Users
         """
-        )
-        return [dict(row._mapping) for row in db.session.execute(query).fetchall()]
+        result = db.session.execute(query).fetchall()
+        return [dict(row._mapping) for row in result]
 
     @staticmethod
     def delete_user(user_id):
@@ -61,8 +72,9 @@ class UserRepository:
     @staticmethod
     def _execute_query(query, data):
         try:
+            print("updatra")
             db.session.execute(text(query), data)
             db.session.commit()
         except Exception as e:
             db.session.rollback()
-            raise e
+            raise e  # Levanta a exceção para ser tratada no UserService
