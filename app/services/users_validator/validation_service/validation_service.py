@@ -1,5 +1,6 @@
 from app.exceptions.validation_error import ValidationError
 from app.models.user_model import UserModel
+from app.services.users_validator.password_validator_service import PasswordService
 from app.services.users_validator.user_data_validator_service import (
     UserDataValidatorService,
 )
@@ -23,7 +24,7 @@ def prepare_user_data(data, action):
     validated_data = UserDataValidatorService.validate_data(
         data, is_update=(action == "update")
     )
-    print("validated_data", validate_data)
+    print("validated_data", validated_data)
     user_data = {
         "name": data.get("name") if data.get("name") else None,
         "cpf": (
@@ -43,11 +44,12 @@ def prepare_user_data(data, action):
             else None
         ),
         "password_hash": (
-            validated_data.get("password_hash")
+            PasswordService.set_password(validated_data["password_hash"])
             if validated_data.get("password_hash")
             else None
         ),
         "time_created": get_current_timestamp() if action == "create" else None,
         "time_updated": get_current_timestamp(),
     }
+    print("USER DATA", user_data)
     return user_data

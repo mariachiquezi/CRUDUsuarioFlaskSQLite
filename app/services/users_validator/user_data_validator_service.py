@@ -27,9 +27,9 @@ class UserDataValidatorService:
     @staticmethod
     def validate_birth_date(birth_date):
         if not birth_date:
+            print("sim asasdasdasd")
             raise ValidationError("Data de nascimento é obrigatória.")
         return BirthDateValidator.validate_and_format_birth_date(birth_date)
-
     @staticmethod
     def validate_password(password):
         return PasswordService.set_password(password) if password else None
@@ -37,7 +37,6 @@ class UserDataValidatorService:
     @staticmethod
     def validate_data(data, is_update=False):
         validated_data = {}
-
         if "email" in data:
             validated_data["email"] = UserDataValidatorService.validate_email(
                 data["email"]
@@ -49,13 +48,15 @@ class UserDataValidatorService:
             )
 
         if "birth_date" in data or not is_update:
+            print('uidbwu9eibfhiwebfhiew bfweihe wchi')
             validated_data["birth_date"] = UserDataValidatorService.validate_birth_date(
                 data.get("birth_date")
             )
+            print("oissss")
 
         if "password_hash" in data:
             validated_data["password_hash"] = (
                 UserDataValidatorService.validate_password(data["password_hash"])
-            )
-
+            )            
+        print("tudo validop", validated_data)
         return validated_data

@@ -1,14 +1,11 @@
 import re
 import bcrypt
-from werkzeug.security import generate_password_hash, check_password_hash
-from app.exceptions.validation_error import (
-    ValidationError,
-)  # Supondo que você tenha esta classe
+from app.exceptions.validation_error import ValidationError
 
 
 class PasswordService:
+    @staticmethod
     def validate_password(password):
-        print("password", password)
         """Valida se a senha atende aos requisitos mínimos"""
         if (
             len(password) < 8
@@ -20,22 +17,27 @@ class PasswordService:
             )
         return True
 
+    @staticmethod
     def set_password(password):
+        print("senhaaaaaaaaaaa")
+        print('password', password)
         """Gera o hash da senha e o retorna após validação"""
         if not PasswordService.validate_password(password):
             raise ValueError("A senha não atende aos requisitos de segurança.")
-        generate_hash = PasswordService.generate_hash(password)
-        return generate_hash
+        return PasswordService.generate_hash(password)
 
+    @staticmethod
     def check_password(password, password_hash):
         """Verifica se a senha fornecida corresponde ao hash armazenado"""
-        return check_password_hash(password_hash, password)
+        password_bytes = password.encode("utf-8")
+        return bcrypt.checkpw(password_bytes, password_hash.encode("utf-8"))
 
+    @staticmethod
     def generate_hash(password):
         """
         Gera um hash para a senha usando bcrypt com fator de custo 12.
         """
-        password_bytes = password.encode("utf-8")  # Convertendo a senha para bytes
+        password_bytes = password.encode("utf-8")
         salt = bcrypt.gensalt(rounds=12)
         hashed_password = bcrypt.hashpw(password_bytes, salt).decode("utf-8")
         return hashed_password

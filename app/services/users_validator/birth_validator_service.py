@@ -45,10 +45,9 @@ class BirthDateValidator:
         :raises ValueError: Se a idade estiver fora do intervalo permitido.
         """
         age = BirthDateValidator.calculate_age(birth_date_obj)
+        print("age", age)
         if age < BirthDateValidator.MIN_AGE or age > BirthDateValidator.MAX_AGE:
-            raise ValueError(
-                f"Idade fora do intervalo permitido ({BirthDateValidator.MIN_AGE}-{BirthDateValidator.MAX_AGE})."
-            )
+            raise ValueError("Idade fora do intervalo permitido.")
 
     @staticmethod
     def format_date_to_db(birth_date_obj: datetime) -> str:
@@ -78,6 +77,7 @@ class BirthDateValidator:
 
     @staticmethod
     def validate_and_format_birth_date(birth_date: str) -> str:
+        print("bpra vaçlodar?")
         """
         Valida e formata a data de nascimento.
 
@@ -88,6 +88,5 @@ class BirthDateValidator:
         normalized_date = BirthDateValidator.normalize_date_format(birth_date)
         birth_date_obj = BirthDateValidator.parse_birth_date(normalized_date)
         BirthDateValidator.validate_age(birth_date_obj)
+        print("validado")
         return BirthDateValidator.format_date_to_db(birth_date_obj)
-
-
