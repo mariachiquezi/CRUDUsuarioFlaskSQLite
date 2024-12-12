@@ -5,4 +5,8 @@ def format_cpf(cpf):
 
 
 def clean_point(value):
-    return value.replace(".", "").replace("-", "")
+    # Verifica se o valor contém pontuação antes de substituir
+    if value and ('.' in value or '-' in value):
+        return value.replace(".", "").replace("-", "")
+    return value
+
