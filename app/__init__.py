@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from app.config import Config
 from db import db
 from app.limiter import limiter
-from app.controllers.user_controller import user_bp
+from app.blueprints.user_blueprints import user_bp
 from app.exceptions.error_handler import register_error_handlers
 
 
