@@ -2,12 +2,19 @@ import logging
 from flask import jsonify
 from flask_limiter import RateLimitExceeded
 
+from app.exceptions.database_error import UniqueConstraintError
 from app.exceptions.validation_error import ValidationError
 from app.exceptions.generic_error import GenericError
 from app.exceptions.rate_limit_error import RateLimitError
 
 
 class ErrorHandler:
+    @staticmethod
+    def handle_exception(e, is_create=False):
+        if is_create and "UNIQUE constraint failed" in str(e.orig):
+            raise UniqueConstraintError("CPF ou Email já estão registrados.")
+        raise e
+
     @staticmethod
     def handle_validation_error(e):
         logging.error(f"Erro de validação: {str(e)}")
