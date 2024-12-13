@@ -40,6 +40,7 @@ class UserService:
             updated_fields = extract_updated_fields(
                 data, dict(zip(COLUMN_NAMES, existing_user))
             )
+            print("udpdate_fildes", updated_fields)
             if not updated_fields:
                 return {"message": "Nenhuma alteração detectada."}, 400
 
@@ -94,7 +95,7 @@ class UserService:
             return ErrorHandler.handle_generic_error(e)
 
     def _get_existing_user(self, user_id):
-        existing_user = UserRepository.get_user(user_id)
+        existing_user = UserRepository.get_user_to_update(user_id)
         if not existing_user:
             return None
         return existing_user

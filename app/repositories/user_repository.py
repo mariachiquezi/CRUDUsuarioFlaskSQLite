@@ -53,7 +53,20 @@ class UserRepository:
             return None
         except Exception as e:
             raise e
-
+    @staticmethod
+    def get_user_to_update(user_id):
+        try:
+            query = text("""
+                SELECT name, birth_date, cpf, email, password_hash, time_updated
+                FROM Users WHERE id = :id
+            """)
+            result = db.session.execute(query, {"id": user_id}).fetchone()
+            if result:
+                print("REUSLTIRRRRRR", result)
+                return dict(result._mapping)
+            return None
+        except Exception as e:
+            raise e
     @staticmethod
     def list_users():
         try:
