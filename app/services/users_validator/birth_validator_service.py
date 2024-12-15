@@ -1,73 +1,38 @@
-from datetime import datetime
+from datetime import datetime, date
 
 
 class BirthDateValidator:
-    """
-    Classe para validar datas de aniversário e verificar se a idade está no intervalo permitido.
-    """
-
     MIN_AGE = 18
     MAX_AGE = 110
 
     @staticmethod
-    def normalize_date_format(birth_date: str) -> str:
-        """
-        Normaliza o formato da data para usar '-' como separador.
-
-        :param birth_date: Data de nascimento como string ('DD-MM-YYYY' ou 'DD/MM/YYYY').
-        :return: Data com separador normalizado ('DD-MM-YYYY').
-        """
-        return birth_date.replace("/", "-")
-
-    @staticmethod
-    def parse_birth_date(birth_date: str) -> datetime:
-        """
-        Converte a data de nascimento em um objeto datetime.
-
-        :param birth_date: Data de nascimento em formato string ('DD-MM-YYYY').
-        :return: Objeto datetime representando a data de nascimento.
-        :raises ValueError: Se o formato da data estiver incorreto.
-        """
+    def parse_birth_date(birth_date) -> date:
+        """Verifica se a data de nascimento já é um objeto datetime.date."""
+        if isinstance(birth_date, date):
+            return birth_date
         try:
-            print("date", birth_date)
-            return datetime.strptime(birth_date, "%d-%m-%Y")
+            return datetime.strptime(birth_date, "%Y-%m-%d").date()
         except ValueError:
             raise ValueError(
-                "Data de nascimento inválida. O formato esperado é 'DD-MM-YYYY' ou 'DD/MM/YYYY'."
+                "Data de nascimento inválida. O formato esperado é 'YYYY-MM-DD'."
             )
 
     @staticmethod
-    def validate_age(birth_date_obj: datetime) -> None:
-        """
-        Verifica se a idade está no intervalo permitido.
-
-        :param birth_date_obj: Objeto datetime representando a data de nascimento.
-        :raises ValueError: Se a idade estiver fora do intervalo permitido.
-        """
+    def validate_age(birth_date_obj: date) -> None:
+        """Verifica se a idade está no intervalo permitido."""
         age = BirthDateValidator.calculate_age(birth_date_obj)
-        print("age", age)
         if age < BirthDateValidator.MIN_AGE or age > BirthDateValidator.MAX_AGE:
             raise ValueError("Idade fora do intervalo permitido.")
 
     @staticmethod
-    def format_date_to_db(birth_date_obj: datetime) -> str:
-        """
-        Formata a data de nascimento no formato 'YYYY-MM-DD'.
-
-        :param birth_date_obj: Objeto datetime representando a data de nascimento.
-        :return: Data formatada como string.
-        """
+    def format_date_to_db(birth_date_obj: date) -> str:
+        """Formata a data de nascimento no formato 'YYYY-MM-DD'."""
         return birth_date_obj.strftime("%Y-%m-%d")
 
     @staticmethod
-    def calculate_age(birth_date_obj: datetime) -> int:
-        """
-        Calcula a idade com base na data de nascimento.
-
-        :param birth_date_obj: Objeto datetime representando a data de nascimento.
-        :return: Idade calculada.
-        """
-        today = datetime.today()
+    def calculate_age(birth_date_obj: date) -> int:
+        """Calcula a idade com base na data de nascimento."""
+        today = date.today()
         age = (
             today.year
             - birth_date_obj.year
@@ -76,17 +41,8 @@ class BirthDateValidator:
         return age
 
     @staticmethod
-    def validate_and_format_birth_date(birth_date: str) -> str:
-        print("bpra vaçlodar?")
-        """
-        Valida e formata a data de nascimento.
-
-        :param birth_date: Data de nascimento em formato string ('DD-MM-YYYY' ou 'DD/MM/YYYY').
-        :return: Data formatada no formato 'YYYY-MM-DD'.
-        :raises ValueError: Se a data não for válida ou a idade estiver fora do intervalo permitido.
-        """
-        normalized_date = BirthDateValidator.normalize_date_format(birth_date)
-        birth_date_obj = BirthDateValidator.parse_birth_date(normalized_date)
+    def validate_and_format_birth_date(birth_date) -> str:
+        """Valida e formata a data de nascimento."""
+        birth_date_obj = BirthDateValidator.parse_birth_date(birth_date)
         BirthDateValidator.validate_age(birth_date_obj)
-        print("validado")
         return BirthDateValidator.format_date_to_db(birth_date_obj)

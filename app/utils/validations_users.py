@@ -4,7 +4,6 @@ from app.utils.format_cpf import clean_point, format_cpf
 from app.utils.format_date import get_current_timestamp
 from app.services.users_validator.validation_service.validation_service import (
     prepare_user_data,
-    validate_data,
 )
 
 
@@ -17,14 +16,9 @@ def extract_updated_fields(data, existing_user_dict):
 
 
 def validate_and_prepare_data(data, action):
-    if action == "create":
-        valid = validate_data(data)
-        if not valid:
-            raise ValidationError("Dados inválidos fornecidos")
-        validated_data = prepare_user_data(valid, action=action)
-    else:
-        validated_data = prepare_user_data(data, action=action)
 
+    validated_data = prepare_user_data(data, action=action)
+    print('validadet_data', validated_data)
     if action == "create":
         validated_data.update(
             {

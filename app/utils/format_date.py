@@ -1,5 +1,21 @@
-from datetime import datetime
+from marshmallow import fields
+from datetime import date, datetime
 import pytz
+
+
+class CustomDateField(fields.Field):
+    def _deserialize(self, value, attr, data, **kwargs):
+        try:
+            return datetime.strptime(value, "%d/%m/%Y").date()
+        except ValueError:
+            self.fail("invalid", input=value)
+
+    def _serialize(self, value, attr, obj, **kwargs):
+        if value is None:
+            return ""
+        if isinstance(value, (datetime, date)):
+            return value.strftime("%d/%m/%Y")
+        return value
 
 
 def get_current_timestamp():

@@ -3,16 +3,10 @@ from app.services.users_validator.birth_validator_service import BirthDateValida
 from app.services.users_validator.cpf_validator import CPFValidator
 from app.services.users_validator.email_validator_service import EmailValidatorService
 from app.services.users_validator.password_validator_service import PasswordService
-from sqlalchemy import text
-from db import db
-from app.utils.format_date import get_current_timestamp
-from app.constants import COLUMN_NAMES
-from app.exceptions.database_error import UniqueConstraintError
-from app.utils.format_cpf import format_cpf
-from app.exceptions.error_handler import ErrorHandler
 
 
 class UserDataValidatorService:
+    
     @staticmethod
     def validate_email(email):
         EmailValidatorService.validate_email(email)
@@ -26,10 +20,11 @@ class UserDataValidatorService:
 
     @staticmethod
     def validate_birth_date(birth_date):
+        print("data",birth_date)
         if not birth_date:
-            print("sim asasdasdasd")
             raise ValidationError("Data de nascimento é obrigatória.")
         return BirthDateValidator.validate_and_format_birth_date(birth_date)
+
     @staticmethod
     def validate_password(password):
         return PasswordService.set_password(password) if password else None
@@ -37,26 +32,27 @@ class UserDataValidatorService:
     @staticmethod
     def validate_data(data, is_update=False):
         validated_data = {}
+        print("datra111111", data)
         if "email" in data:
             validated_data["email"] = UserDataValidatorService.validate_email(
                 data["email"]
             )
-
+        print("email valido")
         if "cpf" in data or not is_update:
             validated_data["cpf"] = UserDataValidatorService.validate_cpf(
                 data.get("cpf")
             )
-
+        print("cpf valido")
         if "birth_date" in data or not is_update:
-            print('uidbwu9eibfhiwebfhiew bfweihe wchi')
             validated_data["birth_date"] = UserDataValidatorService.validate_birth_date(
                 data.get("birth_date")
             )
-            print("oissss")
-
+        print("birth_date valido")
         if "password_hash" in data:
             validated_data["password_hash"] = (
                 UserDataValidatorService.validate_password(data["password_hash"])
-            )            
-        print("tudo validop", validated_data)
+            )
+        print("password_hash valido")
+        validated_data["name"] = data.get("name")  
+        print("validadosim", validated_data)
         return validated_data
