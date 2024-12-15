@@ -1,3 +1,10 @@
+import sys
+import os
+
+# Adicione o diretório base ao sys.path
+base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+sys.path.append(base_dir)
+
 from app import create_app
 from db import db
 

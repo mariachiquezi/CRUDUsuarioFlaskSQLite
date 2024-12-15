@@ -4,6 +4,10 @@ import pytz
 
 
 class CustomDateField(fields.Field):
+    default_error_messages = {
+        "invalid": "Formato de data inválido. O formato esperado é DD/MM/YYYY.",
+    }
+
     def _deserialize(self, value, attr, data, **kwargs):
         try:
             return datetime.strptime(value, "%d/%m/%Y").date()

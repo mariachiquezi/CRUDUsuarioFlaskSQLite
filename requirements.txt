@@ -28,4 +28,4 @@ pydantic[email]
 pytest
 faker
 Werkzeug==2.2.2
-flask-restplus
+flask-restx

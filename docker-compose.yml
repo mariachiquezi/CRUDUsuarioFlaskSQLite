@@ -4,9 +4,9 @@ services:
     build: .
     volumes:
       - .:/app
-      - ./instance:/app/instance  # Garantir que a pasta instance seja mapeada
+      - ./instance:/app/instance  
     ports:
       - "5000:5000"
     environment:
-      - FLASK_APP=app.py  # Ou o nome do arquivo principal do seu app Flask
+      - FLASK_APP=app.py 
       - FLASK_ENV=development
