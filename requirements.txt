@@ -1,12 +1,12 @@
 Flask==2.0.2
 Flask-SQLAlchemy==2.5.1
-SQLAlchemy==1.4.36  # Versão compatível com Flask-SQLAlchemy
+SQLAlchemy==1.4.36  
 Flask-Migrate==3.1.0
 flask-limiter==1.1.0
 flask-marshmallow==0.14.0
 marshmallow-sqlalchemy==0.24.3
 marshmallow==3.13.0
-faker  # Utilize a biblioteca faker ao invés do faker-br
+faker  
 alembic==1.14.0
 itsdangerous==2.2.0
 Jinja2==3.1.4

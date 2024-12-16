@@ -18,7 +18,6 @@ class UserController:
             status_code (int): Código de status HTTP.
         """
         try:
-            # Chama o serviço de criação de usuário
             response, status_code = UserService().create_user(data)
             return response, status_code
         except Exception as e:

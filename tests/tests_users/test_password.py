@@ -25,9 +25,7 @@ def test_validate_password_no_letter():
 def test_set_password_success():
     password = "Password123"
     hashed_password = PasswordService.set_password(password)
-    assert hashed_password.startswith(
-        "$2b$12$"
-    )  # Verifica se o hash é gerado pelo bcrypt
+    assert hashed_password.startswith("$2b$12$")
 
 
 def test_check_password_success():

@@ -30,7 +30,7 @@ def validate_data(data, is_update=False):
         validated_data["email"] = validate_email(data["email"])
     if "cpf" in data:
         validated_data["cpf"] = validate_cpf(data.get("cpf"))
-    elif not is_update:  # Se não é uma atualização e CPF não está nos dados
+    elif not is_update:
         raise ValidationError("CPF é obrigatório para novas criações.")
     if "birth_date" in data or not is_update:
         validated_data["birth_date"] = (
