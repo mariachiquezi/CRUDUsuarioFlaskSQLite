@@ -1,18 +1,17 @@
 from flask import request, jsonify
+from app.exceptions.validation_error import ValidationError
 from app.services.user_service import UserService
 from app.exceptions.error_handler import ErrorHandler
 
-class UserController:
 
+class UserController:
     @staticmethod
     def create_user(data):
         try:
-            user_service = UserService()
-            print("oi controlle")
-            response, status_code = user_service.create_user(data)
+            response, status_code = UserService().create_user(data)
             return response, status_code
         except Exception as e:
-            return ErrorHandler.handle_generic_error(e)
+            return jsonify({"error": str(e)}), 500
 
     @staticmethod
     def list_users():
@@ -32,7 +31,6 @@ class UserController:
             return response, status_code
         except Exception as e:
             return ErrorHandler.handle_generic_error(e)
-
 
     @staticmethod
     def update_user(id, data):

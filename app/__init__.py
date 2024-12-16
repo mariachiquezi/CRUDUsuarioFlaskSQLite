@@ -1,19 +1,25 @@
+import logging
+from logging.handlers import RotatingFileHandler
 from flask import Flask
 from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
 from flask_restx import Api
 from app.config import Config
-from db import db
 from app.limiter import limiter
-from app.blueprints.user_blueprints import user_bp, api as user_api_namespace
+from db import db
+from app.resources.user_resource import user_bp, api as user_api_namespace
 from app.exceptions.error_handler import register_error_handlers
-from app.blueprints.swagger_ui_bp import register_swagger_ui
 
 ma = Marshmallow()
 
 
 def create_app():
     app = Flask(__name__)
+
+    if not app.debug:
+        handler = RotatingFileHandler("app.log", maxBytes=10000, backupCount=3)
+        handler.setLevel(logging.INFO)
+        app.logger.addHandler(handler)
 
     app.config.from_object(Config)
 
@@ -29,16 +35,8 @@ def create_app():
         ma.SQLAlchemySchema.Meta.session = db.session
 
     app.register_blueprint(user_bp, url_prefix="/api")
-
     api.add_namespace(user_api_namespace, path="/api/users")
 
     limiter.init_app(app)
 
-    register_swagger_ui(app)
-
     return app
-
-
-if __name__ == "__main__":
-    app = create_app()
-    app.run(debug=True)

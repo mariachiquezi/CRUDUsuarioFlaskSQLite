@@ -44,14 +44,22 @@ class UserList(Resource):
     def post(self):
         """Cria um novo usuário"""
         data = request.json
+        print("Dados recebidos:", data)
         data = clean_user_data(data)
-
+        print("Dados após limpeza:", data)
         try:
             user_data = user_schema.load(data)
+            print("Dados do usuário carregados:", user_data)
+            user_data_dict = user_schema.dump(user_data)
+            print("Dados do usuário convertidos para dicionário:", user_data_dict)
         except Exception as e:
-            return {"error": str(e)}, 400
+            print("Erro ao carregar os dados do usuário:", str(e))
+            return jsonify({"error": str(e)}), 400
 
-        response, status_code = UserController.create_user(user_data)
+        print("Mandando dados para o controlador")
+        response, status_code = UserController.create_user(user_data_dict)
+        print("Resposta do controlador:", response)
+        print("Status code do controlador:", status_code)
         return response, status_code
 
 

@@ -14,16 +14,10 @@ from app.utils.format_date import get_current_timestamp
 
 
 class UserService:
+
     def create_user(self, data):
         try:
-            print("data",data)
-            if isinstance(data, UserModel): 
-                data = dict(data.__dict__) 
-                data.pop('_sa_instance_state', None)
-            self._validate_required_fields(data)
-            print("valido")
-            data["id"] = None  # Garantir que o id não seja fornecido
-            validate_duplicate_fields(data)
+            data = self._prepare_data_for_save(data)
             validated_data = validate_and_prepare_data(data, "create")
             user = UserRepository.create_user(validated_data)
             return {"message": "Usuário criado com sucesso!"}, 201
@@ -39,9 +33,7 @@ class UserService:
 
     def update_user(self, user_id, data):
         try:
-            if isinstance(data, UserModel): 
-                data = dict(data.__dict__) 
-                data.pop('_sa_instance_state', None)
+            data = self._prepare_data_for_save(data, user_id)
             existing_user = self._get_existing_user(user_id)
             if not existing_user:
                 return {"message": "Usuário não encontrado"}, 404
@@ -73,11 +65,8 @@ class UserService:
         try:
             user = UserRepository.get_user(user_id)
             if user:
-                user_dict = dict(user)
-                user_dict.pop("_sa_instance_state", None)
+                user_dict = self._convert_to_dict(user)
                 user_dict["cpf"] = format_cpf(user_dict["cpf"])
-
-                print("user_dict", user_dict)
                 return {"user": user_dict}, 200
             return {"message": "Usuário não encontrado"}, 404
         except Exception as e:
@@ -88,10 +77,9 @@ class UserService:
             users = UserRepository.list_users()
             if users:
                 formatted_users = [
-                    {**user, "cpf": format_cpf(user["cpf"])} for user in users
+                    {**self._convert_to_dict(user), "cpf": format_cpf(user["cpf"])}
+                    for user in users
                 ]
-                for user in formatted_users:
-                    user.pop("_sa_instance_state", None)
                 return {"users": formatted_users}, 200
             return {"message": "Nenhum usuário encontrado"}, 404
         except Exception as e:
@@ -106,19 +94,27 @@ class UserService:
         except Exception as e:
             return ErrorHandler.handle_generic_error(e)
 
+    def _prepare_data_for_save(self, data, user_id=None):
+        if isinstance(data, UserModel):
+            data = self._convert_to_dict(data)
+        self._validate_required_fields(data)
+        data["id"] = None
+        validate_duplicate_fields(data, user_id)
+        return data
+
+    def _convert_to_dict(self, user):
+        user_dict = dict(user)
+        user_dict.pop("_sa_instance_state", None)
+        return user_dict
+
     def _get_existing_user(self, user_id):
         existing_user = UserRepository.get_user_to_update(user_id)
-        if not existing_user:
-            return None
-        return existing_user
+        return existing_user if existing_user else None
 
-    def _validate_required_fields(self, data): 
+    def _validate_required_fields(self, data):
         print("Validando campos obrigatórios para os dados:", data)
-        for field in REQUIRED_FIELDS: 
-            if field not in data: 
-                print(f"Campo obrigatório ausente: {field}") 
-                raise MissingFieldError(field) 
-            if not data[field]: 
-                print(f"Campo obrigatório vazio: {field}") 
-                raise MissingFieldError(field) 
-    print("Todos os campos obrigatórios estão presentes e preenchidos.")
+        for field in REQUIRED_FIELDS:
+            if field not in data or not data[field]:
+                print(f"Campo obrigatório ausente ou vazio: {field}")
+                raise MissingFieldError(field)
+        print("Todos os campos obrigatórios estão presentes e preenchidos.")

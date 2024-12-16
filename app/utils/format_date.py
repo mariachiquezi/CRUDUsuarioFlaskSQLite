@@ -5,40 +5,65 @@ import pytz
 
 class CustomDateField(fields.Field):
     default_error_messages = {
-        "invalid": "Formato de data inválido. O formato esperado é DD/MM/YYYY.",
+        "invalid": "Formato de data inválido. Os formatos esperados são DD/MM/YYYY ou DD-MM-YYYY.",
     }
 
-    def _deserialize(self, value, attr, data, **kwargs):
-        try:
-            return datetime.strptime(value, "%d/%m/%Y").date()
-        except ValueError:
-            self.fail("invalid", input=value)
+    def _decode(self, value, attr, data, **kwargs):
+        """
+        Transforma uma data fornecida nos formatos DD/MM/YYYY ou DD-MM-YYYY para um objeto date.
+
+        Parâmetros:
+            value (str ou date): Valor da data a ser mudado.
+            attr (str): Atributo que está sendo mudado.
+            data (dict): Dicionário de dados que contém o valor.
+
+        Retorna:
+            date: Objeto date representando a data deserializada.
+        """
+        if isinstance(value, date):
+            return value  # Já é um objeto date, retorna como está
+        for fmt in ("%d/%m/%Y", "%d-%m-%Y"):
+            try:
+                return datetime.strptime(value, fmt).date()
+            except ValueError:
+                continue
+        self.fail("invalid", input=value)
 
     def _serialize(self, value, attr, obj, **kwargs):
+        """
+        Serializa uma data para o formato YYYY-MM-DD.
+
+        Parâmetros:
+            value (date): Objeto date a ser serializado.
+            attr (str): Atributo que está sendo serializado.
+            obj (object): Objeto que contém o valor.
+
+        Retorna:
+            str: String representando a data no formato YYYY-MM-DD.
+        """
         if value is None:
             return ""
         if isinstance(value, (datetime, date)):
-            return value.strftime("%d/%m/%Y")
+            return value.strftime("%Y-%m-%d")  # Converte para o formato yyyy-mm-dd
         return value
 
 
-def get_current_timestamp():
-    """
-    Retorna o timestamp atual ajustado para o fuso horário de Brasília.
-    """
-    utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
-    br_tz = pytz.timezone("America/Sao_Paulo")
-    return utc_now.astimezone(br_tz).strftime("%Y-%m-%d %H:%M:%S")  # Formatando a data
-
-
 class DateTimeUtils:
+    @staticmethod
     def convert_to_timezone(dt, target_timezone="UTC"):
         """
         Converte uma data/hora para o fuso horário desejado.
 
-        :param dt: Data/hora no formato datetime ou string.
-        :param target_timezone: Fuso horário de destino (padrão é "UTC").
-        :return: Data/hora convertida para o fuso horário de destino no formato 'YYYY-MM-DD HH:MM:SS'.
+        Parâmetros:
+            dt (datetime ou str): Data/hora no formato datetime ou string.
+            target_timezone (str): Fuso horário de destino (padrão é "UTC").
+
+        Retorna:
+            str: Data/hora convertida para o fuso horário de destino no formato 'YYYY-MM-DD HH:MM:SS'.
+
+        Levanta:
+            ValueError: Se a string não estiver no formato esperado.
+            TypeError: Se dt não for datetime ou string.
         """
         # Se for uma string, tenta convertê-la para datetime
         if isinstance(dt, str):
@@ -63,13 +88,17 @@ class DateTimeUtils:
 
         return converted_time.strftime("%Y-%m-%d %H:%M:%S")
 
+    @staticmethod
     def adjust_times_for_dict(data, target_timezone="UTC"):
         """
         Ajusta os campos de data em um dicionário para o fuso horário desejado.
 
-        :param data: Dicionário contendo os campos de data/hora a serem ajustados.
-        :param target_timezone: Fuso horário de destino (padrão é "UTC").
-        :return: Dicionário com os campos de data/hora ajustados.
+        Parâmetros:
+            data (dict): Dicionário contendo os campos de data/hora a serem ajustados.
+            target_timezone (str): Fuso horário de destino (padrão é "UTC").
+
+        Retorna:
+            dict: Dicionário com os campos de data/hora ajustados.
         """
         for key in ["time_created", "time_updated"]:
             if isinstance(
