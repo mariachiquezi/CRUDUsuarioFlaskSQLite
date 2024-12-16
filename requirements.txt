@@ -1,0 +1,31 @@
+Flask==2.0.2
+Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.36  # Versão compatível com Flask-SQLAlchemy
+Flask-Migrate==3.1.0
+flask-limiter==1.1.0
+flask-marshmallow==0.14.0
+marshmallow-sqlalchemy==0.24.3
+marshmallow==3.13.0
+faker  # Utilize a biblioteca faker ao invés do faker-br
+alembic==1.14.0
+itsdangerous==2.2.0
+Jinja2==3.1.4
+Mako==1.3.7
+MarkupSafe==3.0.2
+packaging==24.2
+psycopg2-binary==2.9.8
+PyJWT==2.10.1
+pytz==2024.2
+six==1.17.0
+typing_extensions==4.12.2
+validate-docbr==1.10.0
+validators
+python-dotenv
+pytz
+bcrypt
+pydantic
+pydantic[email]
+pytest
+faker
+Werkzeug==2.2.2
+flask-restx
