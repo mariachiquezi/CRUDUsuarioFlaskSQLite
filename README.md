@@ -23,7 +23,7 @@ cd user-management-api
 
 ```sh
 python -m venv venv
-source venv/bin/activate  # No Windows use `venv\Scripts\activate`
+venv\Scripts\activate
 ```
 3. Instale as dependências:
 
