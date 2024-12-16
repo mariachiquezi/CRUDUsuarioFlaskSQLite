@@ -9,7 +9,6 @@ from marshmallow import validates, ValidationError as MarshmallowValidationError
 
 
 class UserSchema(SQLAlchemyAutoSchema):
-    print("chegou")
 
     class Meta:
         model = UserModel

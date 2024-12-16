@@ -21,7 +21,7 @@ class CustomDateField(fields.Field):
             date: Objeto date representando a data deserializada.
         """
         if isinstance(value, date):
-            return value  # Já é um objeto date, retorna como está
+            return value
         for fmt in ("%d/%m/%Y", "%d-%m-%Y"):
             try:
                 return datetime.strptime(value, fmt).date()

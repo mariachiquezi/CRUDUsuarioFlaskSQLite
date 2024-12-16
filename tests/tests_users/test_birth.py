@@ -21,7 +21,7 @@ def test_parse_birth_date_invalid_format():
 def test_validate_age_within_range():
     birth_date = "01/01/2000"
     birth_date_obj = BirthDateValidator.parse_birth_date(birth_date)
-    BirthDateValidator.validate_age(birth_date_obj)  # Não deve levantar exceção
+    BirthDateValidator.validate_age(birth_date_obj)
 
 def test_validate_age_below_minimum():
     birth_date = (
