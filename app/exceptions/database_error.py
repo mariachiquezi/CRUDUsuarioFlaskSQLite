@@ -13,5 +13,5 @@ class MissingFieldError(Exception):
 
     def __init__(self, field):
         self.field = field
-        self.message = f"O campo {field} é obrigatório e está ausente."
+        self.message = f"O campo {field} é obrigatório."
         super().__init__(self.message)

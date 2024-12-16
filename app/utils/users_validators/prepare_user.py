@@ -1,5 +1,26 @@
+from datetime import datetime
+from app.exceptions.validation_error import ValidationError
+from app.models.user_model import UserModel
+
+from app.repositories.user_repository import UserRepository
+from app.utils.format_cpf import clean_point
 from app.utils.format_date import get_current_timestamp
-from app.utils.users_validator.validation_service import prepare_user_data
+from app.utils.id_generator import generate_unique_id
+from app.utils.users_validator.password_validator_service import PasswordService
+
+
+from app.utils.users_validators.data_preparation import prepare_user_data
+
+
+def convert_to_dict(user):
+    user_dict = dict(user)
+    user_dict.pop("_sa_instance_state", None)
+    return user_dict
+
+
+def get_existing_user(user_id):
+    existing_user = UserRepository.get_user_to_update(user_id)
+    return existing_user if existing_user else None
 
 
 def extract_updated_fields(data, existing_user_dict):

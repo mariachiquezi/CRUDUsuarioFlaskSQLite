@@ -11,7 +11,7 @@ class BirthDateValidator:
         Verifica se a data de nascimento é um objeto datetime.date e, se não for, tenta convertê-la.
 
         Parâmetros:
-            birth_date (str ou date): Data de nascimento no formato 'YYYY-MM-DD' ou um objeto date.
+            birth_date (str ou date): Data de nascimento no formato 'DD/MM/YYYY', 'DD-MM-YYYY' ou um objeto date.
 
         Retorna:
             date: Objeto datetime.date representando a data de nascimento.
@@ -21,12 +21,18 @@ class BirthDateValidator:
         """
         if isinstance(birth_date, date):
             return birth_date
-        try:
-            return datetime.strptime(birth_date, "%Y-%m-%d").date()
-        except ValueError:
-            raise ValueError(
-                "Data de nascimento inválida. O formato esperado é 'YYYY-MM-DD'."
-            )
+
+        # Lista de formatos aceitos para a data de nascimento
+        formats = ["%d/%m/%Y", "%d-%m-%Y"]
+        for fmt in formats:
+            try:
+                return datetime.strptime(birth_date, fmt).date()
+            except ValueError:
+                continue
+
+        raise ValueError(
+            "Data de nascimento inválida. O formato esperado é 'DD/MM/YYYY' ou 'DD-MM-YYYY'."
+        )
 
     @staticmethod
     def validate_age(birth_date_obj: date) -> None:
@@ -40,7 +46,7 @@ class BirthDateValidator:
             ValueError: Se a idade calculada estiver fora do intervalo permitido.
         """
         age = BirthDateValidator.calculate_age(birth_date_obj)
-        if age <= MIN_AGE or age > MAX_AGE:
+        if age < MIN_AGE or age > MAX_AGE:
             raise ValueError("Idade fora do intervalo permitido.")
 
     @staticmethod
@@ -81,7 +87,7 @@ class BirthDateValidator:
         Valida e formata a data de nascimento.
 
         Parâmetros:
-            birth_date (str ou date): Data de nascimento no formato 'YYYY-MM-DD' ou um objeto date.
+            birth_date (str ou date): Data de nascimento no formato 'DD/MM/YYYY', 'DD-MM-YYYY' ou um objeto date.
 
         Retorna:
             str: Data de nascimento validada e formatada como string no formato 'YYYY-MM-DD'.

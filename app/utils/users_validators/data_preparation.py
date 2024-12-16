@@ -1,19 +1,15 @@
-from datetime import datetime
-from app.exceptions.validation_error import ValidationError
-from app.models.user_model import UserModel
+# data_preparation.py
 
 from app.utils.format_cpf import clean_point
 from app.utils.format_date import get_current_timestamp
 from app.utils.id_generator import generate_unique_id
 from app.utils.users_validator.password_validator_service import PasswordService
-from app.utils.users_validator.user_data_validator_service import (
-    UserDataValidatorService,
-)
+from app.utils.users_validators.user_data_validator_service import validate_data
 
 
 def prepare_user_data(data, action):
     """Prepara os dados do usuário para criação ou atualização."""
-    validated_data = UserDataValidatorService.validate_data(
+    validated_data = validate_data(
         data, is_update=(action == "update")
     )
 
@@ -36,3 +32,10 @@ def prepare_user_data(data, action):
         "time_updated": get_current_timestamp(),
     }
     return user_data
+
+
+def convert_to_dict(user):
+    """Converte um objeto UserModel para um dicionário."""
+    user_dict = dict(user)
+    user_dict.pop("_sa_instance_state", None)
+    return user_dict
