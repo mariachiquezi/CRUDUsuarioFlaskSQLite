@@ -8,6 +8,9 @@ Este projeto é uma API de gerenciamento de usuários construída com Flask. A A
 - Flask
 - Flask-SQLAlchemy
 - Flask-RESTx
+## Arquivo Principal 
+
+`app.py`
 
 ## Instalação
 
