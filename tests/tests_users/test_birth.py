@@ -1,7 +1,7 @@
 import pytest
 from datetime import datetime, date
 
-from app.utils.data_preparation.birth_validator_service import BirthDateValidator
+from app.utils.users_validator.birth_validator_service import BirthDateValidator
 
 def test_parse_birth_date():
     # Teste com formato 'DD/MM/YYYY'

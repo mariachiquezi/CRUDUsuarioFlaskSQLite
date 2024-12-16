@@ -1,5 +1,5 @@
 from app.exceptions.validation_error import ValidationError
-from app.utils.data_preparation.birth_validator_service import BirthDateValidator
+from app.utils.users_validator.birth_validator_service import BirthDateValidator
 from app.utils.users_validator.cpf_validator import CPFValidator
 from app.utils.users_validator.email_validator_service import EmailValidatorService
 from app.utils.users_validator.password_validator_service import PasswordService

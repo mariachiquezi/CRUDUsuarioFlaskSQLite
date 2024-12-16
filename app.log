@@ -1,0 +1,141 @@
+Iniciando atualização do usuário com ID: ID17343182678291213
+Usuário com ID ID17343182678291213 atualizado com sucesso.
+Buscando usuário com ID: ID17343182678291213
+Usuário com ID ID17343182678291213 encontrado.
+Buscando usuário com ID: ID17343182678291213
+Usuário com ID ID17343182678291213 encontrado.
+Listando todos os usuários.
+100 usuário(s) encontrado(s).
+Deletando usuário com ID: ID17343182693343800
+Usuário com ID ID17343182693343800 deletado com sucesso.
+Deletando usuário com ID: ID17343182693343800
+Usuário com ID ID17343182693343800 não encontrado.
+Deletando usuário com ID: ID17343182693343800
+Buscando usuário com ID: ID17343182693343800
+Usuário com ID ID17343182693343800 não encontrado.
+Usuário com ID ID17343182693343800 não encontrado.
+Buscando usuário com ID: ID17343182693343800
+Buscando usuário com ID: ID17343182693343800
+Usuário com ID ID17343182693343800 não encontrado.
+Usuário com ID ID17343182693343800 não encontrado.
+Listando todos os usuários.
+Listando todos os usuários.
+99 usuário(s) encontrado(s).
+99 usuário(s) encontrado(s).
+Iniciando criação de usuário.
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Erro ao criar usuário: CPF já está cadastrado.
+Iniciando atualização do usuário com ID: ID17340428772238760
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Erro ao atualizar usuário: CPF já está cadastrado.
+Requisição para atualizar usuário com ID: ID17340428772238760 recebida.
+Dados após limpeza: {'name': 'João Gabriel Gomes', 'cpf': '96870431213', 'email': 'alucio@email.com', 'birth_date': '12-02-1985', 'password_hash': '12587ggggAs'}
+Iniciando atualização do usuário com ID: ID17340428772238760
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Erro ao atualizar usuário: CPF já está cadastrado.
+Usuário com ID: ID17340428772238760 atualizado com sucesso.
+Requisição para deletar usuário com ID: ID17340428772238760 recebida.
+Deletando usuário com ID: ID17340428772238760
+Buscando usuário com ID: ID17340428772238760
+Usuário com ID ID17340428772238760 não encontrado.
+Usuário com ID ID17340428772238760 não encontrado.
+Usuário com ID: ID17340428772238760 deletado com sucesso.
+Requisição para criar usuário recebida.
+Dados após limpeza: {'birth_date': '14-08-1970', 'cpf': '36087429131', 'email': 'gmoura@example.org', 'name': 'Luigi Almeida', 'password_hash': '@L0Fr#3Vm9'}
+Iniciando criação de usuário.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Iniciando criação de usuário.
+Executando query: 
+                INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
+                VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
+            
+Query executada e commitada com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Requisição para obter usuário com ID: 999 recebida.
+Buscando usuário com ID: 999
+Buscando usuário com ID: 999
+Usuário com ID 999 não encontrado.
+Usuário com ID 999 não encontrado.
+Usuário com ID: 999 não encontrado.
+Requisição para criar usuário recebida.
+Dados após limpeza: {'birth_date': '10-12-1996', 'cpf': '53071624999', 'email': 'joserodrigues@example.net', 'name': 'Théo Pacheco', 'password_hash': 'MA!3Ho@4MW'}
+Iniciando criação de usuário.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Iniciando criação de usuário.
+Executando query: 
+                INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
+                VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
+            
+Query executada e commitada com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Requisição para atualizar usuário com ID: ID17343550089924999 recebida.
+Dados após limpeza: {'birth_date': '10-12-1996', 'cpf': '53071624999', 'email': 'joserodrigues@example.net', 'name': 'João da Silva', 'password_hash': 'MA!3Ho@4MW'}
+Iniciando atualização do usuário com ID: ID17343550089924999
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Buscando usuário com ID ID17343550089924999 para atualização.
+Usuário com ID ID17343550089924999 encontrado para atualização.
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Iniciando atualização do usuário com ID: ID17343550089924999
+Dados formatados para atualização: {'name': 'João da Silva', 'cpf': '53071624999', 'id': 'ID17343550089924999', 'email': 'joserodrigues@example.net', 'birth_date': '1996-12-10', 'password_hash': '$2b$12$i32peGtyWfVU2eAKFyz5vOjLMPXUgMUr54RYm802HT1jrvWwp6SMC', 'time_updated': '2024-12-16 10:16:49'}
+Executando query: UPDATE Users SET name = :name, cpf = :cpf, email = :email, birth_date = :birth_date, password_hash = :password_hash, time_updated = :time_updated WHERE id = :id
+Query executada e commitada com sucesso.
+Usuário com ID ID17343550089924999 atualizado com sucesso.
+Usuário com ID ID17343550089924999 atualizado com sucesso.
+Usuário com ID: ID17343550089924999 atualizado com sucesso.
+Requisição para criar usuário recebida.
+Dados após limpeza: {'birth_date': '30-08-1990', 'cpf': '49156082711', 'email': 'vcavalcante@example.net', 'name': 'Lucas Gabriel Ramos', 'password_hash': 'Y5KQcvEx#6'}
+Iniciando criação de usuário.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Iniciando criação de usuário.
+Executando query: 
+                INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
+                VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
+            
+Query executada e commitada com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Requisição para deletar usuário com ID: ID17343550104312711 recebida.
+Deletando usuário com ID: ID17343550104312711
+Buscando usuário com ID: ID17343550104312711
+Usuário com ID ID17343550104312711 encontrado.
+Deletando usuário com ID: ID17343550104312711
+Executando query: DELETE FROM Users WHERE id = :id
+Query executada e commitada com sucesso.
+Usuário com ID ID17343550104312711 deletado com sucesso.
+Usuário com ID ID17343550104312711 deletado com sucesso.
+Usuário com ID: ID17343550104312711 deletado com sucesso.
+Requisição para listar todos os usuários recebida.
+Listando todos os usuários.
+Listando todos os usuários.
+101 usuário(s) encontrado(s).
+101 usuário(s) encontrado(s).
+Usuários listados com sucesso.
+Requisição para listar todos os usuários recebida.
+Listando todos os usuários.
+Listando todos os usuários.
+101 usuário(s) encontrado(s).
+101 usuário(s) encontrado(s).
+Usuários listados com sucesso.
