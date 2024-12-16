@@ -58,7 +58,6 @@ def validate_and_prepare_data(data, action):
         dict: Dicionário contendo os dados validados e preparados do usuário.
     """
     validated_data = prepare_user_data(data, action=action)
-    print("validated_data", validated_data)
     if action == "create":
         validated_data.update(
             {

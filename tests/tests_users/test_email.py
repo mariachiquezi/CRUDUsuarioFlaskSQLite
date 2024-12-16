@@ -1,6 +1,6 @@
 import pytest
-from app.services.users_validator.email_validator_service import EmailValidatorService
 from app.exceptions.validation_error import ValidationError
+from app.utils.users_validator.email_validator_service import EmailValidatorService
 
 
 def test_validate_email_success():

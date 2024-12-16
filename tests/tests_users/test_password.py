@@ -1,6 +1,6 @@
 import pytest
-from app.services.users_validator.password_validator_service import PasswordService
 from app.exceptions.validation_error import ValidationError
+from app.utils.users_validator.password_validator_service import PasswordService
 
 
 def test_validate_password_success():

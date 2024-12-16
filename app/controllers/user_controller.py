@@ -54,7 +54,6 @@ class UserController:
         try:
             user_service = UserService()
             response, status_code = user_service.get_user(id)
-            print(status_code)
             return response, status_code
         except Exception as e:
             return ErrorHandler.handle_generic_error(e)

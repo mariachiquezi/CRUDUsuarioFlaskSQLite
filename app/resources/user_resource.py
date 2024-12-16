@@ -26,6 +26,7 @@ user_model = api.model(
 @api.route("/")
 class UserList(Resource):
     @api.doc("list_users")
+    @limiter.limit("5 per minute")
     def get(self):
         """Lista todos os usuários"""
         response, status_code = UserController.list_users()
@@ -44,22 +45,14 @@ class UserList(Resource):
     def post(self):
         """Cria um novo usuário"""
         data = request.json
-        print("Dados recebidos:", data)
         data = clean_user_data(data)
-        print("Dados após limpeza:", data)
         try:
             user_data = user_schema.load(data)
-            print("Dados do usuário carregados:", user_data)
             user_data_dict = user_schema.dump(user_data)
-            print("Dados do usuário convertidos para dicionário:", user_data_dict)
         except Exception as e:
-            print("Erro ao carregar os dados do usuário:", str(e))
             return jsonify({"error": str(e)}), 400
 
-        print("Mandando dados para o controlador")
         response, status_code = UserController.create_user(user_data_dict)
-        print("Resposta do controlador:", response)
-        print("Status code do controlador:", status_code)
         return response, status_code
 
 
@@ -67,6 +60,7 @@ class UserList(Resource):
 @api.response(404, "Usuário não encontrado")
 class User(Resource):
     @api.doc("get_user")
+    @limiter.limit("5 per minute")
     def get(self, id):
         """Obtém um usuário pelo ID"""
         response, status_code = UserController.get_user(id)

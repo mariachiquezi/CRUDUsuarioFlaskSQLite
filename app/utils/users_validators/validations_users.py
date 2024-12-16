@@ -27,7 +27,6 @@ def get_existing_user(user_id):
 
 
 def validate_required_fields(data):
-    print("dataaaaaaaaaaaaaaaaaaa", data)
     for field in REQUIRED_FIELDS:
         if field not in data or not data[field]:
             raise MissingFieldError(field)

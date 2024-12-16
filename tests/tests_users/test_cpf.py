@@ -1,6 +1,6 @@
 import pytest
-from app.services.users_validator.cpf_validator import CPFValidator
 from app.exceptions.validation_error import ValidationError
+from app.utils.users_validator.cpf_validator import CPFValidator
 
 
 def test_clean_cpf():

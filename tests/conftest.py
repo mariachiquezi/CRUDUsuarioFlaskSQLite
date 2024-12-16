@@ -23,13 +23,11 @@ def setup_and_teardown(app):
         db.create_all()
     yield
     with app.app_context():
-        db.session.close_all()  # Close all sessions to avoid issues
+        db.session.close_all()
         for table in reversed(db.metadata.sorted_tables):
-            print(f"Dropping table {table}")  # Debug print
-            db.metadata.remove(
-                table
-            )  # Remove table from metadata to avoid duplication issues
-        db.drop_all()  # Drop all tables completely
+            db.metadata.remove(table)
+
+            db.drop_all()
 
 
 @pytest.fixture
@@ -38,7 +36,7 @@ def fake_user():
     return {
         "name": fake.name(),
         "email": fake.email(),
-        "cpf": fake.cpf(),  # Gera um CPF único
+        "cpf": fake.cpf(),
         "birth_date": fake.date_of_birth(minimum_age=18, maximum_age=90).strftime(
             "%d-%m-%Y"
         ),

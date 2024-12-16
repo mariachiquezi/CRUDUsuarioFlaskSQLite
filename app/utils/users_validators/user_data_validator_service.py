@@ -25,7 +25,6 @@ def validate_password(password):
 
 @staticmethod
 def validate_data(data, is_update=False):
-    print("datinhaaaa", data)
     validated_data = {}
     if "email" in data:
         validated_data["email"] = validate_email(data["email"])
