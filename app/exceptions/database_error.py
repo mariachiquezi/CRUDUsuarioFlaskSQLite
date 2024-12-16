@@ -1,4 +1,3 @@
-# app/exceptions/database_error.py
 class DatabaseError(Exception):
     def __init__(self, message):
         self.message = message
@@ -6,9 +5,9 @@ class DatabaseError(Exception):
 
 
 class UniqueConstraintError(DatabaseError):
-    pass 
+    pass
 
-# app/exceptions/missing_field_error.py
+
 class MissingFieldError(Exception):
     """Exceção para campos obrigatórios ausentes."""
 

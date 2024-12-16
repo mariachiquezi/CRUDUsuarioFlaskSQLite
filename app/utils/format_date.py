@@ -44,8 +44,17 @@ class CustomDateField(fields.Field):
         if value is None:
             return ""
         if isinstance(value, (datetime, date)):
-            return value.strftime("%Y-%m-%d")  # Converte para o formato yyyy-mm-dd
+            return value.strftime("%Y-%m-%d")
         return value
+
+
+def get_current_timestamp():
+    """
+    Retorna o timestamp atual ajustado para o fuso horário de Brasília.
+    """
+    utc_now = datetime.utcnow().replace(tzinfo=pytz.utc)
+    br_tz = pytz.timezone("America/Sao_Paulo")
+    return utc_now.astimezone(br_tz).strftime("%Y-%m-%d %H:%M:%S")
 
 
 class DateTimeUtils:
@@ -74,11 +83,9 @@ class DateTimeUtils:
                     f"A string '{dt}' não tem o formato esperado '%Y-%m-%d %H:%M:%S'."
                 )
 
-        # Verifica se o objeto é datetime
         if isinstance(dt, datetime):
-            # Se não tiver um fuso horário (tzinfo), assume-se que é UTC
             if dt.tzinfo is None:
-                dt = pytz.utc.localize(dt)  # Assume que está em UTC
+                dt = pytz.utc.localize(dt)
         else:
             raise TypeError(f"Esperado datetime ou string, mas foi passado: {type(dt)}")
 
@@ -101,9 +108,7 @@ class DateTimeUtils:
             dict: Dicionário com os campos de data/hora ajustados.
         """
         for key in ["time_created", "time_updated"]:
-            if isinstance(
-                data[key], (datetime, str)
-            ):  # Se o valor for datetime ou string
+            if isinstance(data[key], (datetime, str)):
                 data[key] = DateTimeUtils.convert_to_timezone(
                     data[key], target_timezone
                 )

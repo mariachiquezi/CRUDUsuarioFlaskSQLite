@@ -1,7 +1,6 @@
 import sys
 import os
 
-# Adicione o diretório base ao sys.path
 base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 sys.path.append(base_dir)
 
@@ -10,6 +9,7 @@ from db import db
 
 
 def init_db():
+    """Criar tabelas"""
     app = create_app()
     with app.app_context():
         try:

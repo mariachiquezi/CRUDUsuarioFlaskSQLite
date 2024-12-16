@@ -2,12 +2,12 @@ from sqlalchemy import Index
 from db import db
 from sqlalchemy.sql import func
 from flask_marshmallow import Marshmallow
-from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 ma = Marshmallow()
 
 
 class UserModel(db.Model):
+    # Nome da tabela no banco de dados
     __tablename__ = "Users"
 
     id = db.Column(db.String(20), primary_key=True, nullable=False)
@@ -21,6 +21,7 @@ class UserModel(db.Model):
     time_updated = db.Column(db.DateTime(timezone=True), onupdate=func.now())
     password_hash = db.Column(db.Text, nullable=False)
 
+    # Definição de índices
     __table_args__ = (
         Index("ix_users_name", "name"),
         Index("ix_users_cpf", "cpf"),
