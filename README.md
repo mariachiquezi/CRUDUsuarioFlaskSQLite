@@ -106,7 +106,7 @@ json
 
 **Swagger**
 A documentação da API é gerada automaticamente usando Swagger. Para acessar a documentação interativa, vá para:
-[http://127.0.0.1:5000/swagger/](http://localhost:5000/swagger-ui/)
+http://127.0.0.1:5000/
 
 **Docker**
 Você pode usar Docker para executar a aplicação em um contêiner. Para isso, siga os passos abaixo:
@@ -150,7 +150,18 @@ A API estará disponível em http://127.0.0.1:5000.
 
 `tests/`: Testes automatizados
 
+**Criação de Massa para o banco de dados**
+O script para inserção de dados está no arquivo `inserts_banco.py`
 
+Passos para Executar
+Ative seu ambiente virtual:
+```sh
+venv/Scripts/activate
+```
+Execute o script:
+```sh
+python inserts_banco.py
+```
 **Contato**
 Se tiver alguma dúvida ou sugestão, entre em contato:
 
