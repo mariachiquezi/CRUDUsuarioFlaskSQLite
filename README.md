@@ -45,7 +45,7 @@ python.app
 ````
 A API estará disponível em http://127.0.0.1:5000.
 
-5. Endpoints
+5. Endpoints (postman)
 Criação de Usuário
 ```sh
 POST /api/users/
