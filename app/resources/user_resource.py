@@ -1,4 +1,5 @@
 import logging
+from app.utils.formate_mensage_error import format_message_error
 from flask import Blueprint, request, jsonify
 from flask_restx import Resource, Namespace, fields
 from marshmallow.exceptions import ValidationError as MarshmallowValidationError
@@ -68,8 +69,9 @@ class UserList(Resource):
             logger.info("Usuário criado com sucesso.")
             return response, status_code
         except MarshmallowValidationError as e:
-            logger.error(f"Erro de validação: {e.messages}")
-            return {"error": e.messages}, 400
+            message_error = format_message_error(e)
+            logger.error(f"Erro de validação: {message_error}")
+            return {"error": message_error}, 400
         except Exception as e:
             logger.error(f"Erro ao criar usuário: {str(e)}")
             return ErrorHandler.handle_generic_error(e)
@@ -114,8 +116,9 @@ class User(Resource):
             logger.info(f"Usuário com ID: {id} atualizado com sucesso.")
             return response, status_code
         except MarshmallowValidationError as e:
-            logger.error(f"Erro de validação: {e.messages}")
-            return jsonify({"error": e.messages}), 400
+            message_error = format_message_error(e)
+            logger.error(f"Erro de validação: {message_error}")
+            return {"error": message_error}, 400
         except Exception as e:
             logger.error(f"Erro ao atualizar usuário: {str(e)}")
             return ErrorHandler.handle_generic_error(e)
