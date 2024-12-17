@@ -20,7 +20,7 @@ class ErrorHandler:
             jsonify({"error": str(e)}),
             400,
         )
-
+    
     @staticmethod
     def handle_generic_error(e):
         logging.error(f"Erro genérico: {str(e)}")

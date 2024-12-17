@@ -139,3 +139,50 @@ Listando todos os usuários.
 101 usuário(s) encontrado(s).
 101 usuário(s) encontrado(s).
 Usuários listados com sucesso.
+Requisição para atualizar usuário com ID: ID17340428772238760 recebida.
+Dados após limpeza: {'name': 'João Gabriel Gomes', 'cpf': '96870431213', 'email': 'alucio@email.com', 'birth_date': '12-02-1985', 'password_hash': '12587ggggAs'}
+Iniciando atualização do usuário com ID: ID17340428772238760
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Erro ao atualizar usuário: CPF já está cadastrado.
+Usuário com ID: ID17340428772238760 atualizado com sucesso.
+Requisição para atualizar usuário com ID: ID17340428772238760 recebida.
+Dados após limpeza: {'name': 'João Gabriel Gomes', 'cpf': '74877761071', 'email': 'alucio@email.com', 'birth_date': '12-02-1985', 'password_hash': '12587ggggAs'}
+Iniciando atualização do usuário com ID: ID17340428772238760
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
+Erro ao atualizar usuário: Email já está cadastrado.
+Usuário com ID: ID17340428772238760 atualizado com sucesso.
+Requisição para atualizar usuário com ID: ID17340428772238760 recebida.
+Dados após limpeza: {'name': 'João Gabriel Gomes', 'cpf': '74877761071', 'email': 'lais_cardozo@email.com', 'birth_date': '12-02-1985', 'password_hash': '12587ggggAs'}
+Iniciando atualização do usuário com ID: ID17340428772238760
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Buscando usuário com ID ID17340428772238760 para atualização.
+Usuário com ID ID17340428772238760 não encontrado para atualização.
+Usuário com ID ID17340428772238760 não encontrado.
+Usuário com ID: ID17340428772238760 atualizado com sucesso.
+Requisição para criar usuário recebida.
+Dados após limpeza: {'name': 'João Gabriel Gomes', 'cpf': '74877761071', 'email': 'lais_cardozo@email.com', 'birth_date': '12-02-1985', 'password_hash': '12587ggggAs'}
+Iniciando criação de usuário.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Verificando duplicidade de CPF ou email.
+Nenhuma duplicidade encontrada.
+Iniciando criação de usuário.
+Executando query: 
+                INSERT INTO Users (id, name, birth_date, cpf, email, password_hash, time_created, time_updated)
+                VALUES (:id, :name, :birth_date, :cpf, :email, :password_hash, :time_created, :time_updated)
+            
+Query executada e commitada com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Usuário criado com sucesso.
+Requisição para atualizar usuário com ID: ID17343552317221071 recebida.
+Iniciando atualização do usuário com ID: ID17343552317221071
+Verificando duplicidade de CPF ou email.
+Duplicidade encontrada.
